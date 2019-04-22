@@ -1,0 +1,33 @@
+﻿/**
+ * Name: Benjamin Nicholas Palmer
+ * Student ID: 17743075
+ * Class: Distributed Computing (COMP3008)
+ * Date Last Updated: 22APR19
+ *
+ * Purpose:
+ * CSS for the DnD character builder website.
+ **/
+
+body {
+    font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    background-color: whitesmoke;
+    text-align: center;
+    vertical-align: top;
+    position: absolute;
+    left: 20%;
+    right: 20%;
+}
+
+.options select, button {
+    font-weight: bold;
+    margin: 2px;
+}
+
+h3 {
+    color: midnightblue;
+}
+
+#imgMap {
+    width: 100%;
+    max-width: 500px;
+}

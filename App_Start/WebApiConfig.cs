@@ -1,21 +1,29 @@
 ﻿using System.Web.Http;
 
-namespace DndBuilder
+namespace TMWeb
 {
     public static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
+            /* Settings defined as per practical 3 submission.
+             * Setup here to handle manual routing, and use JSON. */
 
-            // Web API routes
             config.MapHttpAttributeRoutes();
 
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
+            GlobalConfiguration.Configuration.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
+            config.Formatters.Insert(0, new System.Net.Http.Formatting.JsonMediaTypeFormatter());
+
+            Newtonsoft.Json.JsonConvert.DefaultSettings = () =>
+                new Newtonsoft.Json.JsonSerializerSettings
+                {
+                    Formatting = Newtonsoft.Json.Formatting.Indented,
+                    ReferenceLoopHandling = Newtonsoft.Json.
+                ReferenceLoopHandling.Ignore
+                };
+
+            config.Formatters.JsonFormatter.SerializerSettings.
+            DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
         }
     }
 }
