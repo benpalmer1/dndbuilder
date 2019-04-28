@@ -3,7 +3,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 22APR19
+ * Date Last Updated: ......
  * 
  * Purpose:
  * This API is used as an intermediary between the website and database calls.
@@ -14,7 +14,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace DndBuilder.Controllers
+namespace DndBuilder.WebApi
 {
     public class DndApiController : ApiController
     {
