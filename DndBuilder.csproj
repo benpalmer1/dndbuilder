@@ -54,6 +54,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="Mono.Data.Sqlite" />
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.config" />
@@ -62,6 +63,7 @@
     <Content Include="dndbuilder\index.html" />
     <Content Include="dndbuilder\main.css" />
     <Content Include="dndbuilder\main.js" />
+    <Content Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -74,7 +76,8 @@
     <Compile Include="WebApi\Models\DndClass.cs" />
     <Compile Include="WebApi\Models\DndRace.cs" />
     <Compile Include="WebApi\DndBuilderDatabase\Database.cs" />
-    <Compile Include="WebApi\DndBuilderDatabase\DndBuilderSchema.cs" />
+    <Compile Include="WebApi\DndBuilderDatabase\Schema.cs" />
+    <Compile Include="WebApi\Logger.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="WebApi\" />
