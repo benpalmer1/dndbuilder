@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Create Character</title>
+    <link href="main.css" rel="stylesheet" type="text/css" />
+    <script src="createcharacter.js" language="JavaScript" type="text/JavaScript"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+    <body>
+        <h1 id="pageTitle">Edit Character</h1>
+        <form>
+            <label for="name">Name</label>
+            <input type="text" placeholder="Name" name="name" />
+            <br />
+
+            <label for="age">Age</label>
+            <input type="number" placeholder="Age (0-500)" name="age" />
+            <br />
+
+            <label for="gender">Gender</label>
+            <input type="text" placeholder="Gender" name="gender" />
+            <br />
+
+            <label for="biography">Biography</label>
+            <input type="text" placeholder="Biography (500 chars max)" name="biography" />
+            <br />
+
+            <label for="level">Level</label>
+            <input type="number" placeholder="Level (1-20)" name="level" />
+            <br />
+
+            <label for="race">Race</label>
+            <select placeholder="Character race" name="race" />
+            <br />
+
+            <label for="class">Class</label>
+            <select placeholder="Character class" name="class" />
+            <br />
+
+            <label for="spellcaster">Spellcaster?</label>
+            <input type="text" name="spellcaster" value="true" readonly />
+            <br />
+
+            <label for="hitpoints">Hitpoints</label>
+            <input type="number" name="hitpoints" value="32" readonly />
+            <br />
+
+            <br />
+            <div>Ability Scores - Max 20 points, shared</div>
+            <!--Fields generated based on race/class selection-->
+            <div class="abilityscores">
+                <input type="number" name="Consitution" placeholder="Consitution" />
+                <br />
+                <input type="number" name="Dexterity" placeholder="Dexterity" />
+                <br />
+                <input type="number" name="Strength" placeholder="Strength" />
+                <br />
+                <input type="number" name="Charisma" placeholder="Charisma" />
+                <br />
+                <input type="number" name="Intelligence" placeholder="Intelligence" />
+                <br />
+                <input type="number" name="Wisdom" placeholder="Wisdom" />
+            </div>
+
+            <br />
+            <input type="submit" name="submit" value="Save" />
+        </form>
+    </body>
+</html>

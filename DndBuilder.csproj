@@ -62,8 +62,10 @@
     <Content Include="packages.config" />
     <Content Include="dndbuilder\index.html" />
     <Content Include="dndbuilder\main.css" />
-    <Content Include="dndbuilder\main.js" />
+    <Content Include="dndbuilder\index.js" />
     <Content Include="app.config" />
+    <Content Include="dndbuilder\character.html" />
+    <Content Include="dndbuilder\createcharacter.html" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
