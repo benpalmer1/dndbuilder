@@ -3,7 +3,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 02MAY19
+ * Date Last Updated: 09MAY19
  * 
  * Purpose:
  * Database interactivity class responsible for all communication with the SQLite database.
@@ -23,7 +23,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
     {
         private readonly string DATABASE_FILENAME = ConfigurationManager.AppSettings["DatabaseName"];
 
-        // Returns null on failure.
+        // Returns null on failure and empty when char doesn't exist
         public CharacterModel GetCharacter(string charName)
         {
             CharacterModel charModelFromDb = null;
@@ -36,102 +36,131 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
             }
             catch (Exception e) when (e is SqliteException || e is InvalidCastException)
             {
-                Logger.Log("Error: Unable to get character.");
+                Logger.Log("Error: Unable to get character. Message: " + e.Message);
             }
 
             Logger.Log("Info: Client disconnected.");
             return charModelFromDb;
         }
 
-
+        // Returns true on success
         public bool AddCharacter(CharacterModel character)
         {
-            bool isSuccess = false;
-
             try
             {
                 using (var dbConnection = DatabaseSetup())
                 {
-                    var addCharCmd = new SqliteCommand(CharacterTable.Queries.GetInsertQuerySQLite(character), dbConnection);
+                    SqliteCommand checkDBCmd = new SqliteCommand(CharacterTable.Queries.GetCheckExistsQuerySQLite(character.Name), dbConnection);
+                    int count = Convert.ToInt32(checkDBCmd.ExecuteScalar());
 
-                    if (addCharCmd.ExecuteNonQuery() == 1)
+                    if (count == 0)
                     {
-                        isSuccess = true;
+                        var addCharCmd = CharacterTable.Queries.GetInsertQuerySQLite(character);
+                        addCharCmd.Connection = dbConnection;
+
+                        if (addCharCmd.ExecuteNonQuery() == 1)
+                        {
+                            Logger.Log("Info: Character added: " + character.Name);
+                            return true;
+                        }
                     }
                 }
             }
             catch (Exception e) when (e is SqliteException || e is InvalidCastException)
             {
-                Logger.Log("Error: Unable to add character.");
+                Logger.Log("Error: Unable to add character. Message: " + e.Message);
             }
 
             Logger.Log("Info: Client disconnected.");
-            return isSuccess;
+            return false;
         }
 
-
-        public void UpdateCharacter(CharacterModel character)
+        // Returns true on success
+        public bool UpdateCharacter(CharacterModel character, string existingName)
         {
             try
             {
                 using (var dbConnection = DatabaseSetup())
                 {
+                    SqliteCommand checkDBCmd = new SqliteCommand(CharacterTable.Queries.GetCheckExistsQuerySQLite(character.Name), dbConnection);
+                    int count = Convert.ToInt32(checkDBCmd.ExecuteScalar());
 
+                    if (count == 1)
+                    {
+                        var updateCharCmd = CharacterTable.Queries.GetUpdateQuerySQLite(character, existingName);
+                        updateCharCmd.Connection = dbConnection;
+
+                        if (updateCharCmd.ExecuteNonQuery() == 1)
+                        {
+                            Logger.Log("Info: Character updated: " + character.Name);
+                            return true;
+                        }
+                    }
                 }
             }
             catch (Exception e) when (e is SqliteException || e is InvalidCastException)
             {
-                Logger.Log("Error: Unable to update character.");
+                Logger.Log("Error: Unable to update character. Message: " + e.Message);
             }
 
             Logger.Log("Info: Client disconnected.");
+            return false;
         }
 
-
-        public void DeleteCharacter(string characterName)
+        // Returns true on success
+        public bool DeleteCharacter(string characterName)
         {
             try
             {
                 using (var dbConnection = DatabaseSetup())
                 {
+                    SqliteCommand checkDBCmd = new SqliteCommand(CharacterTable.Queries.GetCheckExistsQuerySQLite(characterName), dbConnection);
+                    int count = Convert.ToInt32(checkDBCmd.ExecuteScalar());
 
+                    if (count == 1)
+                    {
+                        var deleteCharCmd = CharacterTable.Queries.GetDeleteQuerySQLite(characterName);
+                        deleteCharCmd.Connection = dbConnection;
+
+                        if (deleteCharCmd.ExecuteNonQuery() == 1)
+                        {
+                            Logger.Log("Info: Character deleted: " + characterName);
+                            return true;
+                        }
+                    }
                 }
             }
             catch (Exception e) when (e is SqliteException || e is InvalidCastException)
             {
-                Logger.Log("Error: Unable to delete character.");
+                Logger.Log("Error: Unable to delete character. Message: " + e.Message);
             }
 
             Logger.Log("Info: Client disconnected.");
+            return false;
         }
 
         private SqliteConnection DatabaseSetup()
         {
             try
             {
-                var isNewDb = false;
                 if (!File.Exists(DATABASE_FILENAME))
                 {
                     SqliteConnection.CreateFile(DATABASE_FILENAME);
-                    isNewDb = true;
                 }
 
                 SqliteConnection newConnection = new SqliteConnection($"DataSource={DATABASE_FILENAME};Version=3;");
                 newConnection.Open();
 
-                // If new database, also setup the table schema.
-                if (isNewDb)
-                {
-                    SqliteCommand newTableCmd = new SqliteCommand(CharacterTable.Queries.GetTableSchemaQuerySQLite(), newConnection);
-                    newTableCmd.ExecuteNonQuery();
-                }
+                // Contains IF NOT EXISTS (removes redundant query to check for existing table)
+                SqliteCommand newTableCmd = new SqliteCommand(CharacterTable.Queries.GetTableSchemaQuerySQLite(), newConnection);
+                newTableCmd.ExecuteNonQuery();
 
                 Logger.Log("Info: Client connected.");
                 return newConnection;
             }
             catch(SqliteException e)
             {
-                Logger.Log("Error: Unable to connect to SQLite database: " + e.Message);
+                Logger.Log("Error: Unable to connect to SQLite database. Message: " + e.Message);
 
                 // rethrow to using and cleanup resources
                 throw;

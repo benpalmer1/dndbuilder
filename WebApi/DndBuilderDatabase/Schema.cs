@@ -3,13 +3,14 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 02MAY19
+ * Date Last Updated: 09MAY19
  * 
  * Purpose:
  * Database schema class responsible for holding DB schema and associated queries.
  */
 
 using DndBuilder.WebApi.Models;
+using Mono.Data.Sqlite;
 
 namespace DndBuilder.WebApi.DndBuilderDatabase
 {
@@ -38,46 +39,81 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                 {
                     // No point specifing string length as per unimposed string length restrictions in SQLite.
                     // Done in validation instead.
+                    // Create table if it doesn't exist, else do nothing.
 
-                    return "CREATE TABLE " + NAME + "(" +
-                        Columns.CHARNAME + " TEXT PRIMARY KEY, " +
-                        Columns.AGE + " NUMERIC, " +
-                        Columns.GENDER + " TEXT, " +
-                        Columns.BIOGRAPHY + " TEXT, " +
-                        Columns.LEVEL + " NUMERIC, " +
-                        Columns.RACE + " TEXT, " +
-                        Columns.CHARCLASS + " TEXT, " +
-                        Columns.ISSPELLCASTER + " BOOLEAN, " + // really, numeric
-                        Columns.HITPOINTS + " NUMERIC, " + ")";
+                    return "CREATE TABLE IF NOT EXISTS " + NAME + "(" +
+                        Columns.CHARNAME        + " TEXT PRIMARY KEY, " +
+                        Columns.AGE             + " NUMERIC, " +
+                        Columns.GENDER          + " TEXT, " +
+                        Columns.BIOGRAPHY       + " TEXT, " +
+                        Columns.LEVEL           + " NUMERIC, " +
+                        Columns.RACE            + " TEXT, " +
+                        Columns.CHARCLASS       + " TEXT, " +
+                        Columns.ISSPELLCASTER   + " BOOLEAN, " + // really, numeric
+                        Columns.HITPOINTS       + " NUMERIC, " + ")";
                 }
 
                 public static string GetQuerySQLite(string charName)
                 {
-                    return "SELECT * FROM " + NAME + " WHERE " + Columns.CHARNAME + " = " + charName;
+                    return "SELECT * FROM " + CharacterTable.NAME + " WHERE " + Columns.CHARNAME + " = '" + charName + "'";
                 }
 
-                public static string GetInsertQuerySQLite(CharacterModel charModel)
+                public static SqliteCommand GetInsertQuerySQLite(CharacterModel charModel)
                 {
-                    return "INSERT INTO " + NAME + "VALUES(" +
-                        charModel.Name + ", " +
-                        charModel.Age + ", " +
-                        charModel.Gender + ", " +
-                        charModel.Biography + ", " +
-                        charModel.Level + ", " +
-                        charModel.Race + ", " +
-                        charModel.CharacterClass + ", " +
-                        charModel.SpellCaster + ", " +
-                        charModel.HitPoints + ", " + ")";
+                    SqliteCommand insertQuery = new SqliteCommand(
+                        "INSERT INTO " + CharacterTable.NAME +
+                        " VALUES(@name,@age,@gender,@biography,@level,@race,@class,@spellcaster,@hp)");
+
+                    insertQuery.Parameters.Add(new SqliteParameter("name", charModel.Name));
+                    insertQuery.Parameters.Add(new SqliteParameter("age", charModel.Age));
+                    insertQuery.Parameters.Add(new SqliteParameter("gender", charModel.Gender));
+                    insertQuery.Parameters.Add(new SqliteParameter("biography", charModel.Biography));
+                    insertQuery.Parameters.Add(new SqliteParameter("level", charModel.Level));
+                    insertQuery.Parameters.Add(new SqliteParameter("race", charModel.Race));
+                    insertQuery.Parameters.Add(new SqliteParameter("class", charModel.CharacterClass));
+                    insertQuery.Parameters.Add(new SqliteParameter("spellcaster", charModel.SpellCaster));
+                    insertQuery.Parameters.Add(new SqliteParameter("hp", charModel.HitPoints));
+
+                    return insertQuery;
                 }
 
-                public static string GetUpdateQuerySQLite(CharacterModel charModel)
+                public static string GetCheckExistsQuerySQLite(string charName)
                 {
-
+                    return "SELECT COUNT(*) FROM " + CharacterTable.NAME + " WHERE " + Columns.CHARNAME + " = '" + charName + "'";
                 }
 
-                public static string GetDeleteQuerySQLite(CharacterModel charModel)
+                public static SqliteCommand GetUpdateQuerySQLite(CharacterModel charModel, string existingName)
                 {
+                    SqliteCommand updateQuery = new SqliteCommand(
+                        "UPDATE " + CharacterTable.NAME + " SET " +
+                        Columns.CHARNAME       + " = @name," +
+                        Columns.AGE            + " = @age," +
+                        Columns.GENDER         + " = @gender," +
+                        Columns.BIOGRAPHY      + " = @biography," +
+                        Columns.LEVEL          + " = @level," +
+                        Columns.RACE           + " = @race," +
+                        Columns.CHARCLASS      + " = @class," +
+                        Columns.ISSPELLCASTER  + " = @spellcaster," +
+                        Columns.HITPOINTS      + " = @hp" +
+                        " WHERE " + Columns.CHARNAME + $" = {existingName}");
 
+                    updateQuery.Parameters.Add(new SqliteParameter("name", charModel.Name));
+                    updateQuery.Parameters.Add(new SqliteParameter("age", charModel.Age));
+                    updateQuery.Parameters.Add(new SqliteParameter("gender", charModel.Gender));
+                    updateQuery.Parameters.Add(new SqliteParameter("biography", charModel.Biography));
+                    updateQuery.Parameters.Add(new SqliteParameter("level", charModel.Level));
+                    updateQuery.Parameters.Add(new SqliteParameter("race", charModel.Race));
+                    updateQuery.Parameters.Add(new SqliteParameter("class", charModel.CharacterClass));
+                    updateQuery.Parameters.Add(new SqliteParameter("spellcaster", charModel.SpellCaster));
+                    updateQuery.Parameters.Add(new SqliteParameter("hp", charModel.HitPoints));
+
+                    return updateQuery;
+                }
+
+                public static SqliteCommand GetDeleteQuerySQLite(string charName)
+                {
+                    return new SqliteCommand(
+                        "DELETE FROM " + CharacterTable.NAME + " WHERE " + Columns.CHARNAME + " = '" + charName + "'");
                 }
             }
         }
