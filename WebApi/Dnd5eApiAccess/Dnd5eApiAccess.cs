@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using DndBuilder.WebApi.Models;
+
 namespace DndBuilder.WebApi.Dnd5eApiAccess
 {
     public class ApiAccess
