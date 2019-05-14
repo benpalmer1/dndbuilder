@@ -2,10 +2,12 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 22APR19
+ * Date Last Updated: 15MAY19
  *
  * Purpose:
  * Main page of the DnD character builder website.
+ * Has section at bottom for viewing all characters stored on the server database.
+ * Section at top allows creation of new characers.
  -->
 
 <!DOCTYPE html>
@@ -15,72 +17,92 @@
     <title>DnD Character Builder</title>
     <link href="main.css" rel="stylesheet" type="text/css" />
     <script src="index.js" language="JavaScript" type="text/JavaScript"></script>
+    <script src="characters.js" language="JavaScript" type="text/JavaScript"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body onload="initStub();">
+<body onload="init();">
     <h1 id="homepageTitle">Dungeons and Dragons Character Builder</h1>
-    <input id="hiddenFieldStub" type="hidden" value="0" />
-    <h2>Character List</h2>
 
     <br />
     <br />
-    <form>
-        <h2>Create a New Character</h2>
-        <label for="name">Name</label>
-        <input type="text" placeholder="Name" name="name" />
-        <br />
 
-        <label for="age">Age</label>
-        <input type="number" placeholder="Age (0-500)" name="age" />
-        <br />
-
-        <label for="gender">Gender</label>
-        <input type="text" placeholder="Gender" name="gender" />
-        <br />
-
-        <label for="biography">Biography</label>
-        <input type="text" placeholder="Biography (500 chars max)" name="biography" />
-        <br />
-
-        <label for="level">Level</label>
-        <input type="number" placeholder="Level (1-20)" name="level" />
-        <br />
-
-        <label for="race">Race</label>
-        <select placeholder="Character race" name="race" />
-        <br />
-
-        <label for="class">Class</label>
-        <select placeholder="Character class" name="class" />
-        <br />
-
-        <label for="spellcaster">Spellcaster?</label>
-        <input type="text" name="spellcaster" value="true" readonly />
-        <br />
-
-        <label for="hitpoints">Hitpoints</label>
-        <input type="number" name="hitpoints" value="32" readonly />
-        <br />
-
-        <br />
-        <div>Ability Scores - Max 20 points, shared</div>
-        <!--Fields generated based on race/class selection-->
-        <div class="abilityscores">
-            <input type="number" name="Consitution" placeholder="Consitution" />
+    <div>
+        <form>
+            <hr />
+            <h2>Create a New Character</h2>
+            <label for="name">Name</label>
+            <input type="text" placeholder="Name" name="name" />
             <br />
-            <input type="number" name="Dexterity" placeholder="Dexterity" />
+
+            <label for="age">Age</label>
+            <input type="number" placeholder="Age (0-500)" name="age" />
             <br />
-            <input type="number" name="Strength" placeholder="Strength" />
+
+            <label for="gender">Gender</label>
+            <input type="text" placeholder="Gender" name="gender" />
             <br />
-            <input type="number" name="Charisma" placeholder="Charisma" />
+
+            <label for="biography">Biography</label>
+            <input type="text" placeholder="Biography (500 chars max)" name="biography" />
             <br />
-            <input type="number" name="Intelligence" placeholder="Intelligence" />
+
+            <label for="level">Level</label>
+            <input type="number" placeholder="Level (1-20)" name="level" />
             <br />
-            <input type="number" name="Wisdom" placeholder="Wisdom" />
+
+            <label for="race">Race</label>
+            <select placeholder="Character race" name="race" />
+            <br />
+
+            <label for="class">Class</label>
+            <select placeholder="Character class" name="class" />
+            <br />
+
+            <label for="spellcaster">Spellcaster?</label>
+            <input type="text" name="spellcaster" value="true" readonly />
+            <br />
+
+            <label for="hitpoints">Hitpoints</label>
+            <input type="number" name="hitpoints" value="32" readonly />
+            <br />
+
+            <br />
+            <div>Ability Scores - Max 20 points, shared</div>
+
+            <div class="abilityscores">
+                <input type="number" name="Consitution" placeholder="Consitution" />
+                <br />
+                <input type="number" name="Dexterity" placeholder="Dexterity" />
+                <br />
+                <input type="number" name="Strength" placeholder="Strength" />
+                <br />
+                <input type="number" name="Charisma" placeholder="Charisma" />
+                <br />
+                <input type="number" name="Intelligence" placeholder="Intelligence" />
+                <br />
+                <input type="number" name="Wisdom" placeholder="Wisdom" />
+            </div>
+
+            <br />
+            <input type="submit" name="submit" value="Create" />
+            <br />
+            <br />
+        </form>
+    </div>
+
+    <div id="characterList">
+        <hr />
+        <h2>Character List</h2>
+        <div class="columnHeaders">
+            <span class="col col1"><strong>Name</strong></span>
+            <span class="col col2"><strong>Race</strong></span>
+            <span class="col col3"><strong>Class</strong></span>
+            <span class="col col4"><strong>Level</strong></span>
+            <span class="col col5"><strong>View Character</strong></span>
+            <br />
+            <br />
         </div>
+    </div>
 
-        <br />
-        <input type="submit" name="submit" value="Create" />
-    </form>
 </body>
 </html>

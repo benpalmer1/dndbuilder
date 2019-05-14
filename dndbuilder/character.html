@@ -1,10 +1,63 @@
-﻿<!DOCTYPE html>
+﻿<!--
+ * Name: Benjamin Nicholas Palmer
+ * Student ID: 17743075
+ * Class: Distributed Computing (COMP3008)
+ * Date Last Updated: 15MAY19
+ *
+ * Purpose:
+ * Character viewing page of the DnD character builder website.
+ -->
+
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Character Viewer</title>
-    </head>
-    <body>
-        <h1>Character Viewer</h1>
-    </body>
+<head>
+    <meta charset="utf-8" />
+    <title>Character Viewer</title>
+    <link href="main.css" rel="stylesheet" type="text/css" />
+    <script src="character.js" language="JavaScript" type="text/JavaScript"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+    <h1>Character Viewer</h1>
+
+    <h3>Name</h3>
+    <div id="charname" />
+
+    <h3>Age</h3>
+    <div id="charage" />
+
+    <h3>Gender</h3>
+    <div id="chargender" />
+
+    <h3>Biography</h3>
+    <div id="charbiography" />
+    <br />
+
+    <h3>Level</h3>
+    <div id="charlevel" />
+
+    <h3>Race</h3>
+    <div id="charrace" />
+
+    <h3>Class</h3>
+    <div id="charclass" />
+
+    <h3>Spellcaster?</h3>
+    <div id="charspellcaster" />
+
+    <h3>Hitpoints</h3>
+    <div id="charhitpoints" />
+
+    <br />
+    <h3>Ability Scores - Max 20 points, shared</h3>
+    <!--Fields generated based on race/class selection-->
+    <div id="charConsitution" />
+    <div id="charDexterity" />
+    <div id="charStrength" />
+    <div id="charCharisma" />
+    <div id="charIntelligence" />
+    <div id="charWisdom" />
+
+    <br />
+</body>
 </html>

@@ -6,7 +6,8 @@
  * Date Last Updated: ......
  * 
  * Purpose:
- * This API is used as an intermediary between the website and database calls.
+ * Exposed API for communication with a front end user interface which implements character building functionality.
+ * Primarily used as an intermediary between the website and database calls.
  */
 
 using System;

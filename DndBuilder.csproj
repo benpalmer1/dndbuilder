@@ -66,7 +66,9 @@
     <Content Include="dndbuilder\index.js" />
     <Content Include="app.config" />
     <Content Include="dndbuilder\character.html" />
-    <Content Include="dndbuilder\createcharacter.html" />
+    <Content Include="dndbuilder\editcharacter.html" />
+    <Content Include="dndbuilder\characters.js" />
+    <Content Include="dndbuilder\viewcharacter.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -74,19 +76,20 @@
     </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="WebApi\DndApiController.cs" />
-    <Compile Include="WebApi\Dnd5eApiAccess\Dnd5eApiAccess.cs" />
-    <Compile Include="WebApi\Models\CharacterModel.cs" />
-    <Compile Include="WebApi\Models\DndClass.cs" />
-    <Compile Include="WebApi\Models\DndRace.cs" />
+    <Compile Include="WebApi\DndApi\DndApi.cs" />
+    <Compile Include="WebApi\Models\DndCharacter.cs" />
     <Compile Include="WebApi\DndBuilderDatabase\Database.cs" />
     <Compile Include="WebApi\DndBuilderDatabase\Schema.cs" />
     <Compile Include="WebApi\Logger.cs" />
     <Compile Include="WebApi\Test\DatabaseTests.cs" />
+    <Compile Include="WebApi\Test\DndApiTests.cs" />
+    <Compile Include="WebApi\Models\DndRace.cs" />
+    <Compile Include="WebApi\Models\DndClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="WebApi\" />
     <Folder Include="dndbuilder\" />
-    <Folder Include="WebApi\Dnd5eApiAccess\" />
+    <Folder Include="WebApi\DndApi\" />
     <Folder Include="WebApi\DndBuilderDatabase\" />
     <Folder Include="WebApi\Models\" />
     <Folder Include="WebApi\Test\" />

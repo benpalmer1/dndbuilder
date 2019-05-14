@@ -13,20 +13,27 @@
 using System;
 using NUnit.Framework;
 
+using DndBuilder.WebApi.DndBuilderDatabase;
+
 
 namespace DndBuilder.WebApi.Test
 {
-    [Obsolete("Needed for mono version of NUnit",false)]
+    [Obsolete("For mono version of NUnit",false)]
     [TestFixture()]
     public class DatabaseTests
     {
-        private void Setup()
-        {
+        private Database db = new Database();
 
+        [SetUp]
+        public void Setup()
+        {
+            db.DatabaseSetup();
+
+            // insert a few characters here:
         }
 
         [TearDown]
-        private void TearDown()
+        public void TearDown()
         {
 
         }
@@ -34,7 +41,10 @@ namespace DndBuilder.WebApi.Test
         [Test()]
         public void DatabaseSetupExists()
         {
-            Setup();
+            Database db2 = new Database();
+            db2.DatabaseSetup();
+
+            // check only one exists?
         }
         [Test()]
         public void DatabaseSetupNotExists()
@@ -45,23 +55,23 @@ namespace DndBuilder.WebApi.Test
         [Test()]
         public void GetCharacterNameNotExists()
         {
-            Setup();
+
         }
         [Test()]
         public void GetCharacterNameExists()
         {
-            Setup();
+
         }
 
         [Test()]
         public void AddCharacterNameNotExists()
         {
-            Setup();
+
         }
         [Test()]
         public void AddCharacterNameExists()
         {
-            Setup();
+
         }
     }
 }
