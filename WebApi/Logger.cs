@@ -11,20 +11,23 @@
 
 using System;
 using System.IO;
-using System.Configuration;
 
 namespace DndBuilder.WebApi
 {
     public static class Logger
     {
+        private static readonly string LOGFILE_NAME = "dnd_log.txt";
+
         public static void Log(string log)
         {
-            var currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
-            var tempLog = currentTime + ": " + log + "\n";
+            string currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            string tempLog = currentTime + ": " + log + "\n";
 
             try
             {
-                File.AppendAllText(ConfigurationManager.AppSettings["LogfileName"], tempLog);
+                string path = LOGFILE_NAME;
+
+                File.AppendAllText(path, tempLog);
             }
             catch (IOException e)
             {

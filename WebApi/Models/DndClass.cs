@@ -9,11 +9,24 @@
  * Model class to hold information about a DnD class from the DnD5e api.
  */
 
+using DndBuilder.WebApi.DndBuilderDatabase;
+
 namespace DndBuilder.WebApi.Models
 {
     public class DndClass
     {
-        public string Name { get; set; }
+        private string _Name;
+
+        public string Name
+        {
+            get => _Name;
+            set
+            {
+                _Name = Database.Encode(Database.Decode(value));
+            }
+        }
+
+        public int HitDie { get; set; }
 
         public bool IsSpellCaster { get; set; }
     }

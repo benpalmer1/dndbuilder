@@ -3,22 +3,29 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 15MAY19
+ * Date Last Updated: 16MAY19
  * 
  * Purpose:
  * Model class to hold information about a DnD race from the DnD5e api.
  */
 
-using System.Collections.Generic;
+using DndBuilder.WebApi.DndBuilderDatabase;
 
 namespace DndBuilder.WebApi.Models
 {
     public class DndRace
     {
-        public string Name { get; set; }
+        private string _Name;
 
-        public int HitDie { get; set; }
+        public string Name
+        {
+            get => _Name;
+            set
+            {
+                _Name = Database.Encode(Database.Decode(value));
+            }
+        }
 
-        public Dictionary<string, int> RacialBonuses { get; set; }
+        public int[] RacialBonuses { get; set; } = new int[6];
     }
 }

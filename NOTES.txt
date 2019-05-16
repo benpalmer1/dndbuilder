@@ -2,12 +2,14 @@
 
     1 - Retrieval of data from dnd5eapi.
       - How to handle errors when retrieving?
+      - FINISHED?
         
       
 
     2 - Database functionality.
       - Storing / retrieving the character
       - Exception handling
+      - FINISHED?
       
       
 
@@ -27,8 +29,7 @@
     5 - Javascript functions.
       - index.js
       - character.js
-      - createcharacter.js
-
+      - createcharacter.js (unsure if necessary?)
       
    
     6 - Report.
@@ -45,6 +46,5 @@
 OTHERS  ****************************************************************************
     
     1 - How to handle ability scores & their racial bonuses.
-      - Reload each time a character is loaded?
       
     2 - Saving characters as xml.

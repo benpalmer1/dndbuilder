@@ -3,25 +3,22 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 15MAY19
+ * Date Last Updated: 16MAY19
  * 
  * Purpose:
- * Database interactivity class responsible for all communication with the SQLite database.
- * 
- * I was contemplating whether to combine all methods into one, with a switch (get,add,update,delete) for their functionality:
- * Decided not to for a few reasons: readability, testability and method responsibility.
+ * Database interactivity class responsible for all communication with the SQLite database in a standard and consistent way.
+ * All queries and schema information from SchemaQueries.cs.
  */
 
 using System;
 using System.IO;
 using System.Web;
-using System.Configuration;
 using Mono.Data.Sqlite;
 
 using DndBuilder.WebApi.Models;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
-using static DndBuilder.WebApi.DndBuilderDatabase.Schema;
+using static DndBuilder.WebApi.DndBuilderDatabase.SchemaQueries;
 
 namespace DndBuilder.WebApi.DndBuilderDatabase
 {
@@ -30,21 +27,53 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
         // Custom exception class to represent errors that arise from the database in a consistent format
         public class DatabaseException : Exception
         {
-            public DatabaseException(string message)
+            public DatabaseException(string message) : base(message)
             {
                 Logger.Log("Error: " + message);
             }
         }
 
-        // From app.config
-        private readonly string DATABASE_FILENAME = ConfigurationManager.AppSettings["DatabaseName"];
+        private static readonly string DATABASE_FILENAME = "dnd_database.sqlite";
 
-        // Returns null on failure
+        public bool IsCharacterNameInUse(string charName)
+        {
+            try
+            {
+                using (SqliteConnection dbConnection = DatabaseSetup())
+                {
+                    SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(charName);
+                    checkDBCmd.Connection = dbConnection;
+                    int count = Convert.ToInt32(checkDBCmd.ExecuteScalar());
+
+                    if (count == 1)
+                    {
+                        return false;
+                    }
+                    else if (count == 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        throw new SqliteException("Database integrity error: more than one character exists with this name.");
+                    }
+                }
+            }
+            catch (Exception e) when (e is SqliteException || e is InvalidCastException)
+            {
+                throw new DatabaseException("Unable to get character. " + e.Message);
+            }
+            finally
+            {
+                Logger.Log("Info: Client disconnected.");
+            }
+        }
+
         public DndCharacter GetCharacter(string charName)
         {
             try
             {
-                using (var dbConnection = DatabaseSetup())
+                using (SqliteConnection dbConnection = DatabaseSetup())
                 {
                     SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(charName);
                     checkDBCmd.Connection = dbConnection;
@@ -93,13 +122,12 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
             }
         }
 
-        // Returns null on failure
         // Method overloading, same functionality as above except with id
         public DndCharacter GetCharacter(int id)
         {
             try
             {
-                using (var dbConnection = DatabaseSetup())
+                using (SqliteConnection dbConnection = DatabaseSetup())
                 {
                     SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(id);
                     checkDBCmd.Connection = dbConnection;
@@ -148,13 +176,12 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
             }
         }
 
-        // Returns empty list when no characters were found.
         public List<DndCharacter> GetAllCharacters()
         {
             List<DndCharacter> characterModels = new List<DndCharacter>();
             try
             {
-                using (var dbConnection = DatabaseSetup())
+                using (SqliteConnection dbConnection = DatabaseSetup())
                 {
                     SqliteCommand checkDBCmd = new SqliteCommand(CharacterTable.Queries.CheckAnyExistsQuery(), dbConnection);
                     int count = Convert.ToInt32(checkDBCmd.ExecuteScalar());
@@ -166,7 +193,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
                         while(reader.Read())
                         {
-                            var tempChar = new DndCharacter()
+                            DndCharacter tempChar = new DndCharacter()
                             {
                                 Id = int.Parse(reader[CharacterTable.Columns.ID].ToString()),
                                 Name = reader[CharacterTable.Columns.CHARNAME].ToString(),
@@ -179,6 +206,50 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                                 SpellCaster = bool.Parse(reader[CharacterTable.Columns.ISSPELLCASTER].ToString()),
                                 HitPoints = int.Parse(reader[CharacterTable.Columns.HITPOINTS].ToString()),
                                 AbilityScores = Deserialize<Dictionary<string, int>>((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
+                            };
+                            characterModels.Add(tempChar);
+                        }
+
+                        return characterModels;
+                    }
+
+                    throw new SqliteException("No characters exist in the database.");
+                }
+            }
+            catch (Exception e) when (e is SqliteException || e is InvalidCastException)
+            {
+                throw new DatabaseException("Unable to get list of characters. " + e.Message);
+            }
+            finally
+            {
+                Logger.Log("Info: Client disconnected.");
+            }
+        }
+
+        public List<SimpleDndCharacter> GetAllCharactersSimple()
+        {
+            List<SimpleDndCharacter> characterModels = new List<SimpleDndCharacter>();
+            try
+            {
+                using (SqliteConnection dbConnection = DatabaseSetup())
+                {
+                    SqliteCommand checkDBCmd = new SqliteCommand(CharacterTable.Queries.CheckAnyExistsQuery(), dbConnection);
+                    int count = Convert.ToInt32(checkDBCmd.ExecuteScalar());
+
+                    if (count >= 1)
+                    {
+                        SqliteCommand getCharCmd = new SqliteCommand(CharacterTable.Queries.AllCharactersQuery(), dbConnection);
+                        SqliteDataReader reader = getCharCmd.ExecuteReader();
+
+                        while(reader.Read())
+                        {
+                            SimpleDndCharacter tempChar = new SimpleDndCharacter()
+                            {
+                                Id = int.Parse(reader[CharacterTable.Columns.ID].ToString()),
+                                Name = reader[CharacterTable.Columns.CHARNAME].ToString(),
+                                Level = int.Parse(reader[CharacterTable.Columns.LEVEL].ToString()),
+                                Race =  Deserialize<DndRace>((byte[])reader[CharacterTable.Columns.RACE]).Name,
+                                CharacterClass = Deserialize<DndClass>((byte[])reader[CharacterTable.Columns.CHARCLASS]).Name,
                             };
                             characterModels.Add(tempChar);
                         }
@@ -206,7 +277,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
         {
             try
             {
-                using (var dbConnection = DatabaseSetup())
+                using (SqliteConnection dbConnection = DatabaseSetup())
                 {
                     SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(character.Name);
                     checkDBCmd.Connection = dbConnection;
@@ -214,7 +285,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
                     if (count == 0)
                     {
-                        var addCharCmd = CharacterTable.Queries.InsertQuery(character);
+                        SqliteCommand addCharCmd = CharacterTable.Queries.InsertQuery(character);
                         addCharCmd.Connection = dbConnection;
 
                         if (addCharCmd.ExecuteNonQuery() == 1)
@@ -242,7 +313,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
         {
             try
             {
-                using (var dbConnection = DatabaseSetup())
+                using (SqliteConnection dbConnection = DatabaseSetup())
                 {
                     SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(character.Name);
                     checkDBCmd.Connection = dbConnection;
@@ -250,7 +321,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
                     if (count == 1)
                     {
-                        var updateCharCmd = CharacterTable.Queries.UpdateQuery(character, existingName);
+                        SqliteCommand updateCharCmd = CharacterTable.Queries.UpdateQuery(character, existingName);
                         updateCharCmd.Connection = dbConnection;
 
                         if (updateCharCmd.ExecuteNonQuery() == 1)
@@ -279,7 +350,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
         {
             try
             {
-                using (var dbConnection = DatabaseSetup())
+                using (SqliteConnection dbConnection = DatabaseSetup())
                 {
                     // Still check by name
                     SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(character.Name);
@@ -288,7 +359,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
                     if (count == 1)
                     {
-                        var updateCharCmd = CharacterTable.Queries.UpdateQuery(character, id);
+                        SqliteCommand updateCharCmd = CharacterTable.Queries.UpdateQuery(character, id);
                         updateCharCmd.Connection = dbConnection;
 
                         if (updateCharCmd.ExecuteNonQuery() == 1)
@@ -316,7 +387,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
         {
             try
             {
-                using (var dbConnection = DatabaseSetup())
+                using (SqliteConnection dbConnection = DatabaseSetup())
                 {
                     SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(characterName);
                     checkDBCmd.Connection = dbConnection;
@@ -324,7 +395,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
                     if (count == 1)
                     {
-                        var deleteCharCmd = CharacterTable.Queries.DeleteQuery(characterName);
+                        SqliteCommand deleteCharCmd = CharacterTable.Queries.DeleteQuery(characterName);
                         deleteCharCmd.Connection = dbConnection;
 
                         if (deleteCharCmd.ExecuteNonQuery() == 1)
@@ -352,7 +423,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
         {
             try
             {
-                using (var dbConnection = DatabaseSetup())
+                using (SqliteConnection dbConnection = DatabaseSetup())
                 {
                     SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(id);
                     checkDBCmd.Connection = dbConnection;
@@ -360,7 +431,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
                     if (count == 1)
                     {
-                        var deleteCharCmd = CharacterTable.Queries.DeleteQuery(id);
+                        SqliteCommand deleteCharCmd = CharacterTable.Queries.DeleteQuery(id);
                         deleteCharCmd.Connection = dbConnection;
 
                         if (deleteCharCmd.ExecuteNonQuery() == 1)
@@ -405,20 +476,17 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
             catch(SqliteException e)
             {
                 throw new DatabaseException("Unable to connect to database. " + e.Message);
-
-                // rethrow to calling statement and cleanup resources
-                throw;
             }
         }
 
-        public string Encode(string htmlInput)
+        public static string Encode(string htmlInput)
         {
-            return HttpUtility.HtmlEncode(HttpUtility.HtmlDecode(htmlInput));
+            return HttpUtility.HtmlEncode(htmlInput);
         }
 
         // Decode(string) - Decodes a html input string of any encoding depth < 1000
         // Designed to handle possibility of any issues from multiple encoding / XSS attempts
-        public string Decode(string htmlInput)
+        public static string Decode(string htmlInput)
         {
             if (htmlInput ==  HttpUtility.HtmlDecode(htmlInput))
             {
@@ -445,9 +513,9 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
         {
             if (objectToSerialize != null)
             {
-                using (var byteStream = new MemoryStream())
+                using (MemoryStream byteStream = new MemoryStream())
                 {
-                    var formatter = new BinaryFormatter();
+                    BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(byteStream, objectToSerialize);
 
                     return byteStream.ToArray();
@@ -463,9 +531,9 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
             {
                 if (byteArrayDeserialize != null)
                 {
-                    using (var byteStream = new MemoryStream(byteArrayDeserialize))
+                    using (MemoryStream byteStream = new MemoryStream(byteArrayDeserialize))
                     {
-                        var formatter = new BinaryFormatter();
+                        BinaryFormatter formatter = new BinaryFormatter();
                         T newObject = (T)formatter.Deserialize(byteStream);
 
                         return newObject;

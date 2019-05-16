@@ -3,7 +3,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 15MAY19
+ * Date Last Updated: 16MAY19
  * 
  * Purpose:
  * Database schema class responsible for holding DB schema and associated queries.
@@ -19,7 +19,7 @@ using Mono.Data.Sqlite;
 
 namespace DndBuilder.WebApi.DndBuilderDatabase
 {
-    public static class Schema
+    public static class SchemaQueries
     {
         public static class CharacterTable
         {
@@ -68,7 +68,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                         "SELECT * FROM " + CharacterTable.NAME +
                         " WHERE " + Columns.CHARNAME + " = @name");
 
-                    getCharQuery.Parameters.Add(new SqliteParameter("name", charName));
+                    getCharQuery.Parameters.Add(new SqliteParameter("@name", charName));
 
                     return getCharQuery;
                 }
@@ -79,7 +79,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                         "SELECT * FROM " + CharacterTable.NAME +
                         " WHERE " + Columns.ID + " = @id");
 
-                    getCharQuery.Parameters.Add(new SqliteParameter("id", id));
+                    getCharQuery.Parameters.Add(new SqliteParameter("@id", id));
 
                     return getCharQuery;
                 }
@@ -95,16 +95,16 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                         "INSERT INTO " + CharacterTable.NAME +
                         " VALUES(@name,@age,@gender,@biography,@level,@race,@class,@spellcaster,@hp,@abilityscores)");
 
-                    insertQuery.Parameters.Add(new SqliteParameter("name", charModel.Name));
-                    insertQuery.Parameters.Add(new SqliteParameter("age", charModel.Age));
-                    insertQuery.Parameters.Add(new SqliteParameter("gender", charModel.Gender));
-                    insertQuery.Parameters.Add(new SqliteParameter("biography", charModel.Biography));
-                    insertQuery.Parameters.Add(new SqliteParameter("level", charModel.Level));
-                    insertQuery.Parameters.Add(new SqliteParameter("race", Database.Serialize(charModel.Race)));
-                    insertQuery.Parameters.Add(new SqliteParameter("class", Database.Serialize(charModel.CharacterClass)));
-                    insertQuery.Parameters.Add(new SqliteParameter("spellcaster", charModel.SpellCaster));
-                    insertQuery.Parameters.Add(new SqliteParameter("hp", charModel.HitPoints));
-                    insertQuery.Parameters.Add(new SqliteParameter("abilityscores", Database.Serialize(charModel.AbilityScores)));
+                    insertQuery.Parameters.Add(new SqliteParameter("@name", charModel.Name));
+                    insertQuery.Parameters.Add(new SqliteParameter("@age", charModel.Age));
+                    insertQuery.Parameters.Add(new SqliteParameter("@gender", charModel.Gender));
+                    insertQuery.Parameters.Add(new SqliteParameter("@biography", charModel.Biography));
+                    insertQuery.Parameters.Add(new SqliteParameter("@level", charModel.Level));
+                    insertQuery.Parameters.Add(new SqliteParameter("@race", Database.Serialize(charModel.Race)));
+                    insertQuery.Parameters.Add(new SqliteParameter("@class", Database.Serialize(charModel.CharacterClass)));
+                    insertQuery.Parameters.Add(new SqliteParameter("@spellcaster", charModel.SpellCaster));
+                    insertQuery.Parameters.Add(new SqliteParameter("@hp", charModel.HitPoints));
+                    insertQuery.Parameters.Add(new SqliteParameter("@abilityscores", Database.Serialize(charModel.AbilityScores)));
 
                     return insertQuery;
                 }
@@ -115,7 +115,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                         "SELECT COUNT(*) FROM " + CharacterTable.NAME +
                         " WHERE " + Columns.CHARNAME + " = @name");
 
-                    checkExistsQuery.Parameters.Add(new SqliteParameter("name", charName));
+                    checkExistsQuery.Parameters.Add(new SqliteParameter("@name", charName));
 
                     return checkExistsQuery;
                 }
@@ -126,7 +126,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                         "SELECT COUNT(*) FROM " + CharacterTable.NAME +
                         " WHERE " + Columns.ID + " = @id");
 
-                    checkExistsQuery.Parameters.Add(new SqliteParameter("id", id));
+                    checkExistsQuery.Parameters.Add(new SqliteParameter("@id", id));
 
                     return checkExistsQuery;
                 }
@@ -153,17 +153,17 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                         Columns.ABILITYSCORES  + " = @abilityscores" +
                         " WHERE " + Columns.CHARNAME + " = @existingname");
 
-                    updateQuery.Parameters.Add(new SqliteParameter("existingname", existingName));
-                    updateQuery.Parameters.Add(new SqliteParameter("name", charModel.Name));
-                    updateQuery.Parameters.Add(new SqliteParameter("age", charModel.Age));
-                    updateQuery.Parameters.Add(new SqliteParameter("gender", charModel.Gender));
-                    updateQuery.Parameters.Add(new SqliteParameter("biography", charModel.Biography));
-                    updateQuery.Parameters.Add(new SqliteParameter("level", charModel.Level));
-                    updateQuery.Parameters.Add(new SqliteParameter("race", Database.Serialize(charModel.Race)));
-                    updateQuery.Parameters.Add(new SqliteParameter("class", Database.Serialize(charModel.CharacterClass)));
-                    updateQuery.Parameters.Add(new SqliteParameter("spellcaster", charModel.SpellCaster));
-                    updateQuery.Parameters.Add(new SqliteParameter("hp", charModel.HitPoints));
-                    updateQuery.Parameters.Add(new SqliteParameter("abilityscores", Database.Serialize(charModel.AbilityScores)));
+                    updateQuery.Parameters.Add(new SqliteParameter("@existingname", existingName));
+                    updateQuery.Parameters.Add(new SqliteParameter("@name", charModel.Name));
+                    updateQuery.Parameters.Add(new SqliteParameter("@age", charModel.Age));
+                    updateQuery.Parameters.Add(new SqliteParameter("@gender", charModel.Gender));
+                    updateQuery.Parameters.Add(new SqliteParameter("@biography", charModel.Biography));
+                    updateQuery.Parameters.Add(new SqliteParameter("@level", charModel.Level));
+                    updateQuery.Parameters.Add(new SqliteParameter("@race", Database.Serialize(charModel.Race)));
+                    updateQuery.Parameters.Add(new SqliteParameter("@class", Database.Serialize(charModel.CharacterClass)));
+                    updateQuery.Parameters.Add(new SqliteParameter("@spellcaster", charModel.SpellCaster));
+                    updateQuery.Parameters.Add(new SqliteParameter("@hp", charModel.HitPoints));
+                    updateQuery.Parameters.Add(new SqliteParameter("@abilityscores", Database.Serialize(charModel.AbilityScores)));
 
                     return updateQuery;
                 }
@@ -184,17 +184,17 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                         Columns.ABILITYSCORES  + " = @abilityscores" +
                         " WHERE " + Columns.ID + " = @id");
 
-                    updateQuery.Parameters.Add(new SqliteParameter("id", id));
-                    updateQuery.Parameters.Add(new SqliteParameter("name", charModel.Name));
-                    updateQuery.Parameters.Add(new SqliteParameter("age", charModel.Age));
-                    updateQuery.Parameters.Add(new SqliteParameter("gender", charModel.Gender));
-                    updateQuery.Parameters.Add(new SqliteParameter("biography", charModel.Biography));
-                    updateQuery.Parameters.Add(new SqliteParameter("level", charModel.Level));
-                    updateQuery.Parameters.Add(new SqliteParameter("race", Database.Serialize(charModel.Race)));
-                    updateQuery.Parameters.Add(new SqliteParameter("class", Database.Serialize(charModel.CharacterClass)));
-                    updateQuery.Parameters.Add(new SqliteParameter("spellcaster", charModel.SpellCaster));
-                    updateQuery.Parameters.Add(new SqliteParameter("hp", charModel.HitPoints));
-                    updateQuery.Parameters.Add(new SqliteParameter("abilityscores", Database.Serialize(charModel.AbilityScores)));
+                    updateQuery.Parameters.Add(new SqliteParameter("@id", id));
+                    updateQuery.Parameters.Add(new SqliteParameter("@name", charModel.Name));
+                    updateQuery.Parameters.Add(new SqliteParameter("@age", charModel.Age));
+                    updateQuery.Parameters.Add(new SqliteParameter("@gender", charModel.Gender));
+                    updateQuery.Parameters.Add(new SqliteParameter("@biography", charModel.Biography));
+                    updateQuery.Parameters.Add(new SqliteParameter("@level", charModel.Level));
+                    updateQuery.Parameters.Add(new SqliteParameter("@race", Database.Serialize(charModel.Race)));
+                    updateQuery.Parameters.Add(new SqliteParameter("@class", Database.Serialize(charModel.CharacterClass)));
+                    updateQuery.Parameters.Add(new SqliteParameter("@spellcaster", charModel.SpellCaster));
+                    updateQuery.Parameters.Add(new SqliteParameter("@hp", charModel.HitPoints));
+                    updateQuery.Parameters.Add(new SqliteParameter("@abilityscores", Database.Serialize(charModel.AbilityScores)));
 
                     return updateQuery;
                 }
@@ -205,7 +205,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                         "DELETE FROM " + CharacterTable.NAME +
                         " WHERE " + Columns.CHARNAME + " = @name");
 
-                    deleteQuery.Parameters.Add(new SqliteParameter("name", charName));
+                    deleteQuery.Parameters.Add(new SqliteParameter("@name", charName));
 
                     return deleteQuery;
                 }
@@ -216,7 +216,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                         "DELETE FROM " + CharacterTable.NAME +
                         " WHERE " + Columns.CHARNAME + " = @id");
 
-                    deleteQuery.Parameters.Add(new SqliteParameter("id", id));
+                    deleteQuery.Parameters.Add(new SqliteParameter("@id", id));
 
                     return deleteQuery;
                 }
