@@ -23,8 +23,8 @@ namespace DndBuilder.WebApi.Models
         [JsonProperty("HitDie")]
         private int _HitDie;
 
-        [JsonProperty("IsSpellCaster")]
-        private bool _IsSpellCaster;
+        [JsonProperty("Spellcaster")]
+        private bool _Spellcaster;
 
         public string Name
         {
@@ -44,12 +44,12 @@ namespace DndBuilder.WebApi.Models
             }
         }
 
-        public bool IsSpellCaster
+        public bool Spellcaster
         {
-            get => _IsSpellCaster;
+            get => _Spellcaster;
             set
             {
-                _IsSpellCaster = value;
+                _Spellcaster = value;
             }
         }
 
@@ -57,7 +57,7 @@ namespace DndBuilder.WebApi.Models
         {
             if (this.Name == b.Name &&
                 this.HitDie == b.HitDie &&
-                this.IsSpellCaster == b.IsSpellCaster)
+                this.Spellcaster == b.Spellcaster)
             {
                 return true;
             }

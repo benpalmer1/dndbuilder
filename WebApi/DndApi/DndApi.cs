@@ -144,7 +144,7 @@ namespace DndBuilder.WebApi.Dnd5eApiAccess
                     {
                         Name = HtmlUtil.Encode(HtmlUtil.Decode(parsedJson["name"].ToString())),
                         HitDie = int.Parse(parsedJson["hit_die"].ToString()),
-                        IsSpellCaster = parsedJson["spellcasting"] != null
+                        Spellcaster = parsedJson["spellcasting"] != null
                     };
                 }
             }

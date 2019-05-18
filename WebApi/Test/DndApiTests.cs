@@ -64,25 +64,25 @@ namespace DndBuilder.WebApi.Test
         [Test]
         public void GetClassByIdTest()
         {
-            DndClass expected = new DndClass() { Name = "Barbarian", HitDie = 12, IsSpellCaster = false };
+            DndClass expected = new DndClass() { Name = "Barbarian", HitDie = 12, Spellcaster = false };
 
             var actual = DndApi.GetClassById(1);
 
             Assert.That(actual.Name, Is.EqualTo(expected.Name));
             Assert.That(actual.HitDie, Is.EqualTo(expected.HitDie));
-            Assert.That(actual.IsSpellCaster, Is.EqualTo(expected.IsSpellCaster));
+            Assert.That(actual.Spellcaster, Is.EqualTo(expected.Spellcaster));
         }
 
         [Test]
         public void GetClassByIdTestSpellcaster()
         {
-            DndClass expected = new DndClass() { Name = "Wizard", HitDie = 6, IsSpellCaster = true };
+            DndClass expected = new DndClass() { Name = "Wizard", HitDie = 6, Spellcaster = true };
 
             var actual = DndApi.GetClassById(12);
 
             Assert.That(actual.Name, Is.EqualTo(expected.Name));
             Assert.That(actual.HitDie, Is.EqualTo(expected.HitDie));
-            Assert.That(actual.IsSpellCaster, Is.EqualTo(expected.IsSpellCaster));
+            Assert.That(actual.Spellcaster, Is.EqualTo(expected.Spellcaster));
         }
 
         [Test]

@@ -40,7 +40,7 @@ namespace DndBuilder.WebApi.Test
                 Biography = "From Teldrassil",
                 Gender = "Male",
                 Race = new DndRace() { Name = "Night Elf", RacialBonuses = new int[] { 0, 0, 0, 0, 10, 0 } },
-                CharacterClass = new DndClass() { Name = "Druid", HitDie = 10, IsSpellCaster = true },
+                CharacterClass = new DndClass() { Name = "Druid", HitDie = 10, Spellcaster = true },
                 AbilityScores = new int[] { 2, 2, 2, 10, 2, 2 }
             });
 
@@ -52,7 +52,7 @@ namespace DndBuilder.WebApi.Test
                 Biography = "From ThunderBluff",
                 Gender = "Male",
                 Race = new DndRace() { Name = "Tauren", RacialBonuses = new int[] { 0, 0, 0, 0, 10, 0 } },
-                CharacterClass = new DndClass() { Name = "Druid", HitDie = 10, IsSpellCaster = true },
+                CharacterClass = new DndClass() { Name = "Druid", HitDie = 10, Spellcaster = true },
                 AbilityScores = new int[] { 2, 2, 2, 10, 2, 2 }
             });
 
@@ -64,7 +64,7 @@ namespace DndBuilder.WebApi.Test
                 Biography = "From Eastern Kingdoms",
                 Gender = "Female",
                 Race = new DndRace() { Name = "Blood Elf", RacialBonuses = new int[] { 0, 0, 0, 0, 10, 0 } },
-                CharacterClass = new DndClass() { Name = "Death Knight", HitDie = 10, IsSpellCaster = true },
+                CharacterClass = new DndClass() { Name = "Death Knight", HitDie = 10, Spellcaster = true },
                 AbilityScores = new int[] { 2, 2, 2, 10, 2, 2 }
             });
 
@@ -134,7 +134,7 @@ namespace DndBuilder.WebApi.Test
                 Biography = "From Teldrassil",
                 Gender = "Male",
                 Race = new DndRace() { Name = "Night Elf", RacialBonuses = new int[] { 0, 0, 0, 0, 10, 0 } },
-                CharacterClass = new DndClass() { Name = "Druid", HitDie = 10, IsSpellCaster = true },
+                CharacterClass = new DndClass() { Name = "Druid", HitDie = 10, Spellcaster = true },
                 AbilityScores = new int[] { 2, 2, 2, 10, 2, 2 }
             };
 
@@ -157,7 +157,7 @@ namespace DndBuilder.WebApi.Test
                 Biography = "From Springfield",
                 Gender = "Male",
                 Race = new DndRace() { Name = "Human", RacialBonuses = new int[] { 0, 0, 0, 0, 0, 0 } },
-                CharacterClass = new DndClass() { Name = "Lazy", HitDie = 0, IsSpellCaster = false },
+                CharacterClass = new DndClass() { Name = "Lazy", HitDie = 0, Spellcaster = false },
                 AbilityScores = new int[] { 2, 2, 2, 10, 2, 2 }
             };
 
@@ -183,7 +183,7 @@ namespace DndBuilder.WebApi.Test
                 Biography = "From Teldrassil",
                 Gender = "Male",
                 Race = new DndRace() { Name = "Night Elf", RacialBonuses = new int[] { 0, 0, 0, 0, 10, 0 } },
-                CharacterClass = new DndClass() { Name = "Druid", HitDie = 10, IsSpellCaster = true },
+                CharacterClass = new DndClass() { Name = "Druid", HitDie = 10, Spellcaster = true },
                 AbilityScores = new int[] { 2, 2, 2, 10, 2, 2 }
             };
 
@@ -215,7 +215,7 @@ namespace DndBuilder.WebApi.Test
                 Gender = "Yes",
                 Biography = "From Teldrassil",
                 Race = new DndRace() { Name = "Night Elf", RacialBonuses = new int[] { 0, 0, 0, 0, 10, 0 } },
-                CharacterClass = new DndClass() { Name = "Druid", IsSpellCaster = true },
+                CharacterClass = new DndClass() { Name = "Druid", Spellcaster = true },
                 AbilityScores = new int[] { 2, 2, 2, 10, 2, 2 }
             };
 
@@ -224,7 +224,7 @@ namespace DndBuilder.WebApi.Test
                 Age = 40,
                 Level = 80,
                 Gender = "Yes",
-                CharacterClass = new DndClass() { Name = "Druid", IsSpellCaster = true },
+                CharacterClass = new DndClass() { Name = "Druid", Spellcaster = true },
                 AbilityScores = new int[] { 2, 2, 2, 10, 2, 2 }
             };
 
@@ -235,7 +235,7 @@ namespace DndBuilder.WebApi.Test
                 Level = 4,
                 Gender = "Yes",
                 Race = new DndRace() { Name = "Night Elf", RacialBonuses = new int[] { 0, 0, 0, 0, 10, 0 } },
-                CharacterClass = new DndClass() { Name = "Druid", IsSpellCaster = true },
+                CharacterClass = new DndClass() { Name = "Druid", Spellcaster = true },
                 AbilityScores = new int[] { 2, 2, 2, 10, 2, 2 }
             };
 
@@ -254,7 +254,7 @@ namespace DndBuilder.WebApi.Test
                 Age = 40,
                 Level = 44,
                 Race = new DndRace() { RacialBonuses = new int[] { 0, 0, 0, 0, 10, 0 } },
-                CharacterClass = new DndClass() { Name = "Druid", IsSpellCaster = true }
+                CharacterClass = new DndClass() { Name = "Druid", Spellcaster = true }
             };
 
             try
