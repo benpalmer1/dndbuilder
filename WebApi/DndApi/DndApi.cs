@@ -23,7 +23,6 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 
 using DndBuilder.WebApi.Models;
-using DndBuilder.WebApi.DndBuilderDatabase;
 using Newtonsoft.Json;
 
 namespace DndBuilder.WebApi.Dnd5eApiAccess
@@ -62,7 +61,7 @@ namespace DndBuilder.WebApi.Dnd5eApiAccess
 
                     foreach (JObject item in JObject.Parse(reader.ReadToEnd())["results"])
                     {
-                        string tempName = Database.Encode(Database.Decode(item["name"].ToString()));
+                        string tempName = HtmlUtil.Encode(HtmlUtil.Decode(item["name"].ToString()));
                         string tempUrl = item["url"].ToString();
 
                         // Protect against server spoofing of URL. Replaces expected endpoint from returned URL, interacts with "ids" instead.
@@ -110,7 +109,7 @@ namespace DndBuilder.WebApi.Dnd5eApiAccess
 
                     return new DndRace()
                     {
-                        Name = Database.Encode(Database.Decode(parsedJson["name"].ToString())),
+                        Name = HtmlUtil.Encode(HtmlUtil.Decode(parsedJson["name"].ToString())),
                         RacialBonuses = parsedJson["ability_bonuses"].Select(x => (int)x).ToArray()
                     };
                 }
@@ -143,7 +142,7 @@ namespace DndBuilder.WebApi.Dnd5eApiAccess
 
                     return new DndClass()
                     {
-                        Name = Database.Encode(Database.Decode(parsedJson["name"].ToString())),
+                        Name = HtmlUtil.Encode(HtmlUtil.Decode(parsedJson["name"].ToString())),
                         HitDie = int.Parse(parsedJson["hit_die"].ToString()),
                         IsSpellCaster = parsedJson["spellcasting"] != null
                     };

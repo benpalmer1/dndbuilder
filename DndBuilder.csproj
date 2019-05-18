@@ -85,6 +85,7 @@
     <Compile Include="WebApi\Models\DndRace.cs" />
     <Compile Include="WebApi\Models\DndClass.cs" />
     <Compile Include="WebApi\Models\SimpleDndCharacter.cs" />
+    <Compile Include="WebApi\HtmlUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="WebApi\" />

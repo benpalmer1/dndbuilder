@@ -3,7 +3,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 02MAY19
+ * Date Last Updated: 15MAY19
  * 
  * Purpose:
  * Simple server-side logging functionality to record errors and client connections/disconnections.

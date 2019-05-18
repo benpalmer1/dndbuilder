@@ -2,7 +2,7 @@
 
     1 - Retrieval of data from dnd5eapi.
       - How to handle errors when retrieving?
-      - FINISHED?
+      - FINISHED & TESTED.
         
       
 
@@ -16,6 +16,7 @@
     3 - Web Api (with DB) funtionality.
       - Exception handling - how to report errors back to the user?
       - Input sanitisation?
+      - FINISHED?
       
       
       
@@ -48,3 +49,4 @@ OTHERS  ************************************************************************
     1 - How to handle ability scores & their racial bonuses.
       
     2 - Saving characters as xml.
+      - Client side?

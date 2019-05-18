@@ -3,7 +3,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 16MAY19
+ * Date Last Updated: 18MAY19
  * 
  * Purpose:
  * Database interactivity class responsible for all communication with the SQLite database in a standard and consistent way.
@@ -12,7 +12,6 @@
 
 using System;
 using System.IO;
-using System.Web;
 using Mono.Data.Sqlite;
 
 using DndBuilder.WebApi.Models;
@@ -33,7 +32,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
             }
         }
 
-        private static readonly string DATABASE_FILENAME = "dnd_database.sqlite";
+        public static readonly string DATABASE_FILENAME = "dnd_database.sqlite";
 
         public bool IsCharacterNameInUse(string charName)
         {
@@ -47,16 +46,15 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
                     if (count == 1)
                     {
-                        return false;
-                    }
-                    else if (count == 0)
-                    {
                         return true;
                     }
-                    else
+
+                    if (count == 0)
                     {
-                        throw new SqliteException("Database integrity error: more than one character exists with this name.");
+                        return false;
                     }
+
+                    throw new SqliteException("Database integrity error: more than one character exists with this name.");
                 }
             }
             catch (Exception e) when (e is SqliteException || e is InvalidCastException)
@@ -95,14 +93,13 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                             Gender = reader[CharacterTable.Columns.GENDER].ToString(),
                             Biography = reader[CharacterTable.Columns.BIOGRAPHY].ToString(),
                             Level = int.Parse(reader[CharacterTable.Columns.LEVEL].ToString()),
-                            Race = Deserialize<DndRace>((byte[])reader[CharacterTable.Columns.RACE]),
-                            CharacterClass = Deserialize<DndClass>((byte[])reader[CharacterTable.Columns.CHARCLASS]),
-                            SpellCaster = bool.Parse(reader[CharacterTable.Columns.ISSPELLCASTER].ToString()),
-                            HitPoints = int.Parse(reader[CharacterTable.Columns.HITPOINTS].ToString()),
-                            AbilityScores = Deserialize<Dictionary<string, int>>((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
+                            Race = (DndRace)Deserialize((byte[])reader[CharacterTable.Columns.RACE]),
+                            CharacterClass = (DndClass)Deserialize((byte[])reader[CharacterTable.Columns.CHARCLASS]),
+                            AbilityScores = (int[])Deserialize((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
                         };
                     }
-                    else if (count == 0)
+
+                    if (count == 0)
                     {
                         throw new SqliteException("Character does not exist in the database.");
                     }
@@ -149,14 +146,13 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                             Gender = reader[CharacterTable.Columns.GENDER].ToString(),
                             Biography = reader[CharacterTable.Columns.BIOGRAPHY].ToString(),
                             Level = int.Parse(reader[CharacterTable.Columns.LEVEL].ToString()),
-                            Race =  Deserialize<DndRace>((byte[])reader[CharacterTable.Columns.RACE]),
-                            CharacterClass = Deserialize<DndClass>((byte[])reader[CharacterTable.Columns.CHARCLASS]),
-                            SpellCaster = bool.Parse(reader[CharacterTable.Columns.ISSPELLCASTER].ToString()),
-                            HitPoints = int.Parse(reader[CharacterTable.Columns.HITPOINTS].ToString()),
-                            AbilityScores = Deserialize<Dictionary<string, int>>((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
+                            Race = (DndRace)Deserialize((byte[])reader[CharacterTable.Columns.RACE]),
+                            CharacterClass = (DndClass)Deserialize((byte[])reader[CharacterTable.Columns.CHARCLASS]),
+                            AbilityScores = (int[])Deserialize((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
                         };
                     }
-                    else if (count == 0)
+
+                    if (count == 0)
                     {
                         throw new SqliteException("Character does not exist in the database.");
                     }
@@ -201,11 +197,9 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                                 Gender = reader[CharacterTable.Columns.GENDER].ToString(),
                                 Biography = reader[CharacterTable.Columns.BIOGRAPHY].ToString(),
                                 Level = int.Parse(reader[CharacterTable.Columns.LEVEL].ToString()),
-                                Race =  Deserialize<DndRace>((byte[])reader[CharacterTable.Columns.RACE]),
-                                CharacterClass = Deserialize<DndClass>((byte[])reader[CharacterTable.Columns.CHARCLASS]),
-                                SpellCaster = bool.Parse(reader[CharacterTable.Columns.ISSPELLCASTER].ToString()),
-                                HitPoints = int.Parse(reader[CharacterTable.Columns.HITPOINTS].ToString()),
-                                AbilityScores = Deserialize<Dictionary<string, int>>((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
+                                Race =  (DndRace)Deserialize((byte[])reader[CharacterTable.Columns.RACE]),
+                                CharacterClass = (DndClass)Deserialize((byte[])reader[CharacterTable.Columns.CHARCLASS]),
+                                AbilityScores = (int[])Deserialize((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
                             };
                             characterModels.Add(tempChar);
                         }
@@ -248,18 +242,16 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                                 Id = int.Parse(reader[CharacterTable.Columns.ID].ToString()),
                                 Name = reader[CharacterTable.Columns.CHARNAME].ToString(),
                                 Level = int.Parse(reader[CharacterTable.Columns.LEVEL].ToString()),
-                                Race =  Deserialize<DndRace>((byte[])reader[CharacterTable.Columns.RACE]).Name,
-                                CharacterClass = Deserialize<DndClass>((byte[])reader[CharacterTable.Columns.CHARCLASS]).Name,
+                                Race =  ((DndRace)Deserialize((byte[])reader[CharacterTable.Columns.RACE])).Name,
+                                CharacterClass = ((DndClass)Deserialize((byte[])reader[CharacterTable.Columns.CHARCLASS])).Name
                             };
                             characterModels.Add(tempChar);
                         }
 
                         return characterModels;
                     }
-                    else
-                    {
-                        throw new SqliteException("No characters exist in the database.");
-                    }
+
+                    throw new SqliteException("No characters exist in the database.");
                 }
             }
             catch (Exception e) when (e is SqliteException || e is InvalidCastException)
@@ -277,6 +269,11 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
         {
             try
             {
+                if (!character.IsValid)
+                {
+                    throw new DatabaseException("Unable to add character. Character invalid.");
+                }
+
                 using (SqliteConnection dbConnection = DatabaseSetup())
                 {
                     SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(character.Name);
@@ -294,6 +291,10 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                             return true;
                         }
                     }
+                    else
+                    {
+                        throw new SqliteException("Character by that name already exists.");
+                    }
                 }
             }
             catch (Exception e) when (e is SqliteException || e is InvalidCastException)
@@ -309,19 +310,25 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
         }
 
         // Returns true on success
-        public bool UpdateCharacter(DndCharacter character, string existingName)
+        public bool EditCharacter(DndCharacter character, string existingCharacter)
         {
             try
             {
+                if (!character.IsValid)
+                {
+                    throw new DatabaseException("Unable to edit character. Character invalid.");
+                }
+
                 using (SqliteConnection dbConnection = DatabaseSetup())
                 {
+                    // Still check by name
                     SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(character.Name);
                     checkDBCmd.Connection = dbConnection;
                     int count = Convert.ToInt32(checkDBCmd.ExecuteScalar());
 
                     if (count == 1)
                     {
-                        SqliteCommand updateCharCmd = CharacterTable.Queries.UpdateQuery(character, existingName);
+                        SqliteCommand updateCharCmd = CharacterTable.Queries.EditQuery(character, existingCharacter);
                         updateCharCmd.Connection = dbConnection;
 
                         if (updateCharCmd.ExecuteNonQuery() == 1)
@@ -346,10 +353,15 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
         // Returns true on success
         // Method overload
-        public bool UpdateCharacter(DndCharacter character, int id)
+        public bool EditCharacter(DndCharacter character)
         {
             try
             {
+                if (!character.IsValid)
+                {
+                    throw new DatabaseException("Unable to edit character. Character invalid.");
+                }
+
                 using (SqliteConnection dbConnection = DatabaseSetup())
                 {
                     // Still check by name
@@ -359,7 +371,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
                     if (count == 1)
                     {
-                        SqliteCommand updateCharCmd = CharacterTable.Queries.UpdateQuery(character, id);
+                        SqliteCommand updateCharCmd = CharacterTable.Queries.EditQuery(character, character.Id.ToString());
                         updateCharCmd.Connection = dbConnection;
 
                         if (updateCharCmd.ExecuteNonQuery() == 1)
@@ -479,72 +491,34 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
             }
         }
 
-        public static string Encode(string htmlInput)
-        {
-            return HttpUtility.HtmlEncode(htmlInput);
-        }
-
-        // Decode(string) - Decodes a html input string of any encoding depth < 1000
-        // Designed to handle possibility of any issues from multiple encoding / XSS attempts
-        public static string Decode(string htmlInput)
-        {
-            if (htmlInput ==  HttpUtility.HtmlDecode(htmlInput))
-            {
-                return htmlInput;
-            }
-            else
-            {
-                int ii = 0;
-		        string temp = htmlInput;
-		        string decoded = HttpUtility.HtmlDecode(htmlInput);
-                
-                // Limited to prevent long running script on some error
-		        while (temp != decoded && ii++ < 1000)
-		        {
-			        temp = decoded;
-			        decoded = HttpUtility.HtmlDecode(decoded);
-		        }
-
-                return decoded;
-            }
-        }
-
         public static byte[] Serialize(object objectToSerialize)
         {
             if (objectToSerialize != null)
             {
-                using (MemoryStream byteStream = new MemoryStream())
+                using (MemoryStream memStream = new MemoryStream())
                 {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(byteStream, objectToSerialize);
+                    BinaryFormatter binFormat = new BinaryFormatter();
+                    binFormat.Serialize(memStream, objectToSerialize);
 
-                    return byteStream.ToArray();
+                    return memStream.ToArray();
                 }
             }
 
             return null;
         }
 
-        public static T Deserialize<T>(byte[] byteArrayDeserialize)
+        public static object Deserialize(byte[] byteArrayDeserialize)
         {
-            try
+            if (byteArrayDeserialize != null)
             {
-                if (byteArrayDeserialize != null)
+                using (MemoryStream byteStream = new MemoryStream(byteArrayDeserialize))
                 {
-                    using (MemoryStream byteStream = new MemoryStream(byteArrayDeserialize))
-                    {
-                        BinaryFormatter formatter = new BinaryFormatter();
-                        T newObject = (T)formatter.Deserialize(byteStream);
-
-                        return newObject;
-                    }
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    return formatter.Deserialize(byteStream);
                 }
             }
-            catch (InvalidCastException)
-            {
-               return default(T);
-            }
-            return default(T);
+
+            return null;
         }
     }
 }

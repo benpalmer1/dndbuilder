@@ -3,10 +3,10 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 16MAY19
+ * Date Last Updated: 18MAY19
  * 
  * Purpose:
- * eposed API for communication with a front end user interface which implements character building functionality.
+ * Exposed API for communication with a front end user interface which implements character building functionality.
  * Primarily used as an intermediary between the website and database calls.
  */
 
@@ -23,6 +23,48 @@ namespace DndBuilder.WebApi
 {
     public class DndApiController : ApiController
     {
+        // Add a new character to the database.
+        // Returns true on success.
+        [HttpPost]
+        [Route("api/characters/add")]
+        public bool Post_AddCharacter([FromBody] DndCharacter newCharacter)
+        {
+            try {
+                Database database = new Database();
+                return database.AddCharacter(newCharacter);
+            } catch (Exception e) {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+        }
+
+        // Edit a character in the database - by id.
+        // Returns true on success.
+        [HttpPost]
+        [Route("api/characters/edit")]
+        public bool Post_EditCharacter([FromBody] DndCharacter updatedCharacter)
+        {
+            try {
+                Database database = new Database();
+                return database.EditCharacter(updatedCharacter);
+            } catch (Exception e) {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+        }
+
+        // Edit a character in the database - by name.
+        // Returns true on success.
+        [HttpPost]
+        [Route("api/characters/edit")]
+        public bool Post_EditCharacter([FromBody] DndCharacter updatedCharacter, [FromBody] string existingName)
+        {
+            try {
+                Database database = new Database();
+                return database.EditCharacter(updatedCharacter, existingName);
+            } catch (Exception e) {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+        }
+
         // Returns a list of all characters in the database in the full format.
         [HttpGet]
         [Route("api/characters")]
@@ -37,6 +79,7 @@ namespace DndBuilder.WebApi
         }
 
         // Returns a list of all characters in the database in a simple format.
+        // Used by the web interface in order to save unnecessary data transfer.
         [HttpGet]
         [Route("api/characters/simple")]
         public List<SimpleDndCharacter> Get_SimpleList()
@@ -75,7 +118,7 @@ namespace DndBuilder.WebApi
             }
         }
 
-        // Determine if a character by that name eists in the database - by name.
+        // Determine if a character by that name exists in the database - by name.
         [HttpPost]
         [Route("api/characters/exists")]
         public bool Post_CharacterExists([FromBody]string characterName)

@@ -22,10 +22,10 @@ using DndBuilder.WebApi.Models;
 namespace DndBuilder.WebApi.Test
 {
     [Obsolete("For mono version of NUnit",false)]
-    [TestFixture()]
+    [TestFixture]
     public class DndApiTests
     {
-        [Test()]
+        [Test]
         public void GetClassUrlListTest()
         {
             string expectedNames = "BarbarianBardClericDruidFighterMonkPaladinRangerRogueSorcererWarlockWizard";
@@ -43,7 +43,7 @@ namespace DndBuilder.WebApi.Test
             Assert.That(actualIds, Is.EqualTo(expectedIds));
         }
 
-        [Test()]
+        [Test]
         public void GetRaceUrlListTest()
         {
             string expectedNames = "DwarfElfHalflingHumanDragonbornGnomeHalf-ElfHalf-OrcTiefling";
@@ -61,7 +61,7 @@ namespace DndBuilder.WebApi.Test
             Assert.That(actualIds, Is.EqualTo(expectedIds));
         }
 
-        [Test()]
+        [Test]
         public void GetClassByIdTest()
         {
             DndClass expected = new DndClass() { Name = "Barbarian", HitDie = 12, IsSpellCaster = false };
@@ -73,7 +73,7 @@ namespace DndBuilder.WebApi.Test
             Assert.That(actual.IsSpellCaster, Is.EqualTo(expected.IsSpellCaster));
         }
 
-        [Test()]
+        [Test]
         public void GetClassByIdTestSpellcaster()
         {
             DndClass expected = new DndClass() { Name = "Wizard", HitDie = 6, IsSpellCaster = true };
@@ -85,7 +85,7 @@ namespace DndBuilder.WebApi.Test
             Assert.That(actual.IsSpellCaster, Is.EqualTo(expected.IsSpellCaster));
         }
 
-        [Test()]
+        [Test]
         public void GetRaceById()
         {
             DndRace expected = new DndRace() { Name = "Dwarf", RacialBonuses = new int[] {0,0,2,0,0,0} };
