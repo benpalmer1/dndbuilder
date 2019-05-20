@@ -2,7 +2,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 15MAY19
+ * Date Last Updated: 20MAY19
  *
  * Purpose:
  * CSS for the DnD character builder website.
@@ -73,6 +73,12 @@ form {
 }
 #characterList form {
     display: inline;
+}
+
+.colChar {
+    display: inline-block;
+    width: 30%;
+    min-width: 50px;
 }
 
 .col1Label {

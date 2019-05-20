@@ -65,7 +65,6 @@
     <Content Include="dndbuilder\index.js" />
     <Content Include="dndbuilder\character.html" />
     <Content Include="dndbuilder\editcharacter.html" />
-    <Content Include="dndbuilder\character.js" />
     <Content Include="dndbuilder\viewcharacter.js" />
     <Content Include="packages.config" />
   </ItemGroup>

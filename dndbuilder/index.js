@@ -2,7 +2,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 19MAY19
+ * Date Last Updated: 20MAY19
  *
  * Purpose:
  * Javascript for the index page of the DnD character builder website.
@@ -446,13 +446,8 @@ function addCharacterToList(id, name, race, charClass, level)
     viewHidId.setAttribute("type", "hidden");
     viewHidId.setAttribute("value", id);
     viewHidId.setAttribute("name", "id");
-    let viewHidName = document.createElement("input");
-    viewHidName.setAttribute("type", "hidden");
-    viewHidName.setAttribute("value", name);
-    viewHidName.setAttribute("name", "name");
     viewForm.appendChild(viewButton);
     viewForm.appendChild(viewHidId);
-    viewForm.appendChild(viewHidName);
     viewNode.appendChild(viewForm);
     viewNode.setAttribute("class", "col col5");
 

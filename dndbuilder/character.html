@@ -2,7 +2,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 15MAY19
+ * Date Last Updated: 20MAY19
  *
  * Purpose:
  * Character viewing page of the DnD character builder website.
@@ -14,51 +14,124 @@
     <meta charset="utf-8" />
     <title>Character Viewer</title>
     <link href="main.css" rel="stylesheet" type="text/css" />
-    <script src="character.js" language="JavaScript" type="text/JavaScript"></script>
+    <script src="viewcharacter.js" language="JavaScript" type="text/JavaScript"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body>
+<body onload="init();">
     <h1>Character Viewer</h1>
 
-    <h3>Name</h3>
-    <div id="charname" />
-
-    <h3>Age</h3>
-    <div id="charage" />
-
-    <h3>Gender</h3>
-    <div id="chargender" />
-
-    <h3>Biography</h3>
-    <div id="charbiography" />
+    <button onclick="backToHome();">Back to Home</button>
+    <br />
     <br />
 
-    <h3>Level</h3>
-    <div id="charlevel" />
+    <strong class="colChar">Name</strong>
+    <span class="colChar" id="charname"></span>
+    <br />
 
-    <h3>Race</h3>
-    <div id="charrace" />
+    <strong class="colChar">Age</strong>
+    <span class="colChar" id="charage"></span>
+    <br />
 
-    <h3>Class</h3>
-    <div id="charclass" />
+    <strong class="colChar">Gender</strong>
+    <span class="colChar" id="chargender"></span>
+    <br />
 
-    <h3>Spellcaster?</h3>
-    <div id="charspellcaster" />
+    <strong class="colChar">Biography</strong>
+    <span class="colChar" id="charbiography"></span>
+    <br />
 
-    <h3>Hitpoints</h3>
-    <div id="charhitpoints" />
+    <strong class="colChar">Level</strong>
+    <span class="colChar" id="charlevel"></span>
+    <br />
+
+    <strong class="colChar">Hitpoints</strong>
+    <span class="colChar" id="charhitpoints"></span>
+    <br />
 
     <br />
-    <h3>Ability Scores - Max 20 points, shared</h3>
-
-    <!--Fields generated based on race/class selection-->
-    <div id="charConsitution" />
-    <div id="charDexterity" />
-    <div id="charStrength" />
-    <div id="charCharisma" />
-    <div id="charIntelligence" />
-    <div id="charWisdom" />
+    <span class="colChar"><strong>Race Details</strong></span>
+    <span class="colChar"></span>
+    <br />
+    <di class="colChar">Name</di>
+    <span class="colChar" id="racename"></span>
+    <br />
 
     <br />
+    <span class="colChar"><strong>Class Details</strong></span>
+    <span class="colChar"></span>
+    <br />
+    <span class="colChar">Name</span>
+    <div class="colChar" id="classname"></div>
+    <br />
+    <span class="colChar">Hit Die Value</span>
+    <div class="colChar" id="classhitdie"></div>
+    <br />
+    <span class="colChar">Spellcaster</span>
+    <div class="colChar" id="classspellcaster"></div>
+    <br />
+    <br />
+
+    <strong class="col colExtra">Ability Scores</strong>
+    <span class="col colExtra"></span>
+    <span class="col colExtra"></span>
+    <span class="col colExtra"></span>
+    <br />
+    <span class="col col1Label">Name</span>
+    <span class="col colExtra">Score</span>
+    <span class="col colExtra">Race Bonus</span>
+    <span class="col colExtra">Total</span>
+
+    <div class="abilityscores" name="AbilityScores">
+        <span class="col col1Label"><label for="Consitution">Consitution</label></span>
+        <span id="constitution" class="col colExtra"></span>
+        <span id="constitutionbonus" class="col colExtra"></span>
+        <span id="constitutiontotal" class="col colExtra"></span>
+        <br />
+
+        <span class="col col1Label"><label for="Dexterity">Dexterity</label></span>
+        <span id="dexterity" class="col colExtra"></span>
+        <span id="dexteritybonus" class="col colExtra"></span>
+        <span id="dexteritytotal" class="col colExtra"></span>
+        <br />
+
+        <span class="col col1Label"><label for="Strength">Strength</label></span>
+        <span id="strength" class="col colExtra"></span>
+        <span id="strengthbonus" class="col colExtra"></span>
+        <span id="strengthtotal" class="col colExtra"></span>
+        <br />
+
+        <span class="col col1Label"><label for="Charisma">Charisma</label></span>
+        <span id="charisma" class="col colExtra"></span>
+        <span id="charismabonus" class="col colExtra"></span>
+        <span id="charismatotal" class="col colExtra"></span>
+        <br />
+
+        <span class="col col1Label"><label for="Intelligence">Intelligence</label></span>
+        <span id="intelligence" class="col colExtra"></span>
+        <span id="intelligencebonus" class="col colExtra"></span>
+        <span id="intelligencetotal" class="col colExtra"></span>
+        <br />
+
+        <span class="col col1Label"><label for="Wisdom">Wisdom</label></span>
+        <span id="wisdom" class="col colExtra"></span>
+        <span id="wisdombonus" class="col colExtra"></span>
+        <span id="wisdomtotal" class="col colExtra"></span>
+        <br />
+    </div>
+
+    <br />
+    <br />
+    <form style='display:inline;' action="editcharacter.html" method="GET">
+        <button type="submit">Edit</button>
+        <input id="editcharacterid" type="hidden" name="id"/>
+    </form>
+    <span class="col colExtra">
+        <button>Download</button>
+    </span>
+
+    <br />
+    <hr />
+    <div>Curtin University - Benjamin Palmer - 17743075 - Distributed Computing Assignment </div>
+
 </body>
 </html>
