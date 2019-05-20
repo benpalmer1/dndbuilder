@@ -85,7 +85,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
                         reader.Read();
 
-                        return new DndCharacter()
+                        DndCharacter newCharacter = new DndCharacter()
                         {
                             Id = int.Parse(reader[CharacterTable.Columns.ID].ToString()),
                             Name = reader[CharacterTable.Columns.CHARNAME].ToString(),
@@ -97,6 +97,10 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                             CharacterClass = (DndClass)Deserialize((byte[])reader[CharacterTable.Columns.CHARCLASS]),
                             AbilityScores = (int[])Deserialize((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
                         };
+
+                        newCharacter.HitPoints = (newCharacter.Level * newCharacter.CharacterClass.HitDie) + newCharacter.AbilityScores[0];
+
+                        return newCharacter;
                     }
 
                     if (count == 0)
@@ -138,7 +142,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
                         reader.Read();
 
-                        return new DndCharacter()
+                        DndCharacter newCharacter = new DndCharacter()
                         {
                             Id = int.Parse(reader[CharacterTable.Columns.ID].ToString()),
                             Name = reader[CharacterTable.Columns.CHARNAME].ToString(),
@@ -148,8 +152,11 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                             Level = int.Parse(reader[CharacterTable.Columns.LEVEL].ToString()),
                             Race = (DndRace)Deserialize((byte[])reader[CharacterTable.Columns.RACE]),
                             CharacterClass = (DndClass)Deserialize((byte[])reader[CharacterTable.Columns.CHARCLASS]),
-                            AbilityScores = (int[])Deserialize((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
+                            AbilityScores = (int[])Deserialize((byte[])reader[CharacterTable.Columns.ABILITYSCORES]),
                         };
+                        newCharacter.HitPoints = (newCharacter.Level * newCharacter.CharacterClass.HitDie) + newCharacter.AbilityScores[0];
+
+                        return newCharacter;
                     }
 
                     if (count == 0)
@@ -201,6 +208,8 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                                 CharacterClass = (DndClass)Deserialize((byte[])reader[CharacterTable.Columns.CHARCLASS]),
                                 AbilityScores = (int[])Deserialize((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
                             };
+                            tempChar.HitPoints = (tempChar.Level * tempChar.CharacterClass.HitDie) + tempChar.AbilityScores[0];
+
                             characterModels.Add(tempChar);
                         }
 
@@ -271,7 +280,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
             {
                 if (!character.IsValid)
                 {
-                    throw new DatabaseException("Unable to add character. Character invalid.");
+                    throw new DatabaseException("Unable to add character. Character fails server validation.");
                 }
 
                 using (SqliteConnection dbConnection = DatabaseSetup())

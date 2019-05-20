@@ -16,7 +16,7 @@ using NUnit.Framework;
 using System;
 using NUnit.Framework.SyntaxHelpers;
 
-using DndBuilder.WebApi.Dnd5eApiAccess;
+using DndBuilder.WebApi.Dnd5eApi;
 using DndBuilder.WebApi.Models;
 
 namespace DndBuilder.WebApi.Test
@@ -33,7 +33,9 @@ namespace DndBuilder.WebApi.Test
             string actualNames = "";
             string actualIds = "";
 
-            foreach (var race in DndApi.GetRaceOrClassesNameIdList(isRaceRequest: false))
+            DndApi api = new DndApi();
+
+            foreach (var race in api.GetRaceOrClassesNameIdList(isRaceRequest: false))
             {
                 actualNames += race.Key;
                 actualIds += race.Value;
@@ -51,7 +53,9 @@ namespace DndBuilder.WebApi.Test
             string actualNames = "";
             string actualIds = "";
 
-            foreach (var race in DndApi.GetRaceOrClassesNameIdList(isRaceRequest: true))
+            DndApi api = new DndApi();
+
+            foreach (var race in api.GetRaceOrClassesNameIdList(isRaceRequest: true))
             {
                 actualNames += race.Key;
                 actualIds += race.Value;
@@ -66,7 +70,9 @@ namespace DndBuilder.WebApi.Test
         {
             DndClass expected = new DndClass() { Name = "Barbarian", HitDie = 12, Spellcaster = false };
 
-            var actual = DndApi.GetClassById(1);
+            DndApi api = new DndApi();
+
+            var actual = api.GetClassById(1);
 
             Assert.That(actual.Name, Is.EqualTo(expected.Name));
             Assert.That(actual.HitDie, Is.EqualTo(expected.HitDie));
@@ -78,7 +84,9 @@ namespace DndBuilder.WebApi.Test
         {
             DndClass expected = new DndClass() { Name = "Wizard", HitDie = 6, Spellcaster = true };
 
-            var actual = DndApi.GetClassById(12);
+            DndApi api = new DndApi();
+
+            var actual = api.GetClassById(12);
 
             Assert.That(actual.Name, Is.EqualTo(expected.Name));
             Assert.That(actual.HitDie, Is.EqualTo(expected.HitDie));
@@ -90,7 +98,9 @@ namespace DndBuilder.WebApi.Test
         {
             DndRace expected = new DndRace() { Name = "Dwarf", RacialBonuses = new int[] {0,0,2,0,0,0} };
 
-            var actual = DndApi.GetRaceById(1);
+            DndApi api = new DndApi();
+
+            var actual = api.GetRaceById(1);
 
             Assert.That(actual.Name, Is.EqualTo(expected.Name));
             Assert.That(actual.RacialBonuses, Is.EqualTo(expected.RacialBonuses));

@@ -25,9 +25,9 @@ using Newtonsoft.Json.Linq;
 using DndBuilder.WebApi.Models;
 using Newtonsoft.Json;
 
-namespace DndBuilder.WebApi.Dnd5eApiAccess
+namespace DndBuilder.WebApi.Dnd5eApi
 {
-    public static class DndApi
+    public class DndApi
     {
         // Custom exception class to represent errors that arise from the dnd5e api in a consistent format
         // Used to easily differentiate between an issue accesing Dnd5e API and the server database.
@@ -39,10 +39,10 @@ namespace DndBuilder.WebApi.Dnd5eApiAccess
             }
         }
 
-        private static readonly string RACE_ENDPOINT = "http://www.dnd5eapi.co/api/races/";
-        private static readonly string CLASS_ENDPOINT = "http://www.dnd5eapi.co/api/classes/";
+        private readonly string RACE_ENDPOINT = "http://www.dnd5eapi.co/api/races/";
+        private readonly string CLASS_ENDPOINT = "http://www.dnd5eapi.co/api/classes/";
 
-        public static Dictionary<string, int> GetRaceOrClassesNameIdList(bool isRaceRequest)
+        public Dictionary<string, int> GetRaceOrClassesNameIdList(bool isRaceRequest)
         {
             string endpoint = isRaceRequest ? RACE_ENDPOINT : CLASS_ENDPOINT;
 
@@ -92,7 +92,7 @@ namespace DndBuilder.WebApi.Dnd5eApiAccess
         }
 
         // Usable based on return value of the Race from the URL query (api/races/{id}).
-        public static DndRace GetRaceById(int raceId)
+        public DndRace GetRaceById(int raceId)
         {
             try
             {
@@ -105,13 +105,19 @@ namespace DndBuilder.WebApi.Dnd5eApiAccess
                     Stream data = response.GetResponseStream();
                     StreamReader reader = new StreamReader(data);
 
-                    JObject parsedJson = JObject.Parse(reader.ReadToEnd());
-
-                    return new DndRace()
+                    string jsonString = reader.ReadToEnd();
+                    if (jsonString != "null")
                     {
-                        Name = HtmlUtil.Encode(HtmlUtil.Decode(parsedJson["name"].ToString())),
-                        RacialBonuses = parsedJson["ability_bonuses"].Select(x => (int)x).ToArray()
-                    };
+                        JObject parsedJson = JObject.Parse(jsonString);
+
+                        return new DndRace()
+                        {
+                            Name = HtmlUtil.Encode(HtmlUtil.Decode(parsedJson["name"].ToString())),
+                            RacialBonuses = parsedJson["ability_bonuses"].Select(x => (int)x).ToArray()
+                        };
+                    }
+
+                    throw new DndApiException("Dnd5e api returned null. Requested race does not exist.");
                 }
             }
             catch (WebException e)
@@ -125,7 +131,7 @@ namespace DndBuilder.WebApi.Dnd5eApiAccess
         }
 
         // Usable based on return value of the Class from the URL query (api/classes/{id}).
-        public static DndClass GetClassById(int classId)
+        public DndClass GetClassById(int classId)
         {
             try
             {

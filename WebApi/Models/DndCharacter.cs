@@ -37,14 +37,14 @@ namespace DndBuilder.WebApi.Models
         [JsonProperty("Level")]
         private int _Level;
 
+        [JsonProperty("HitPoints")]
+        private int _HitPoints;
+
         [JsonProperty("Race")]
         private DndRace _Race = new DndRace();
 
         [JsonProperty("CharacterClass")]
         private DndClass _CharacterClass = new DndClass();
-
-        [JsonProperty("HitPoints")]
-        public int HitPoints => (_Level * _CharacterClass.HitDie) + _AbilityScores[0]; // Must be public
 
         [JsonProperty("AbilityScores")]
         private int[] _AbilityScores;
@@ -67,6 +67,11 @@ namespace DndBuilder.WebApi.Models
             set { _Level = value; }
         }
 
+        public int HitPoints
+        {
+            get => _HitPoints;
+            set { _HitPoints = value; }
+        }
 
         public DndRace Race
         {
@@ -125,7 +130,7 @@ namespace DndBuilder.WebApi.Models
             return false;
         }
 
-        // Due to spec being vague about gender and biography requirements, only enforce must be non-empty string.
+        // Due to spec being vague about gender and biography requirements, only enforce must be non-null string.
         public bool IsValid =>
             !string.IsNullOrEmpty(this.Name) &&
             this.Age >= 0 &&
@@ -140,6 +145,7 @@ namespace DndBuilder.WebApi.Models
             this.CharacterClass != null &&
             this.CharacterClass.IsValid &&
             this.AbilityScores != null &&
+            this.AbilityScores.Length == 6 &&
             this.AbilityScores.All(x => x >= 0) &&
             this.AbilityScores.Sum() == 20;
     }     

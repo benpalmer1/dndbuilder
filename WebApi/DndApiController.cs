@@ -3,7 +3,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 18MAY19
+ * Date Last Updated: 19MAY19
  * 
  * Purpose:
  * Exposed API for communication with a front end user interface which implements character building functionality.
@@ -18,11 +18,114 @@ using System.Web.Http;
 
 using DndBuilder.WebApi.DndBuilderDatabase;
 using DndBuilder.WebApi.Models;
+using DndBuilder.WebApi.Dnd5eApi;
 
 namespace DndBuilder.WebApi
 {
     public class DndApiController : ApiController
     {
+        // Get list of classes and ids from dnd5e api - call before using Get_ClassById.
+        // This method works quickly - you should prefer to call this over Get_AllClasses if possible.
+        [HttpGet]
+        [Route("api/classes/simple")]
+        public Dictionary<string,int> Get_AllClassesSimple()
+        {
+            try {
+                DndApi dndApi = new DndApi();
+                return dndApi.GetRaceOrClassesNameIdList(false);
+            } catch (Exception e) {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+        }
+
+        // Get individual class by Id
+        // Must be called using a value from Get_ClassIds due to possible changes to id, on an update of dnd5eapi
+        [HttpGet]
+        [Route("api/classes/{id}")]
+        public DndClass Get_ClassById(int id)
+        {
+            try {
+                DndApi dndApi = new DndApi();
+                return dndApi.GetClassById(id);
+            } catch (Exception e){
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+        }
+
+        // Get list of classes from dnd5e api
+        // This call requires quite a lot of network interaction with the Dnd5e Api. Avoid if possible.
+        [HttpGet]
+        [Route("api/classes")]
+        public List<DndClass> Get_AllClasses()
+        {
+            try {
+                List<DndClass> classes = new List<DndClass>();
+                DndApi dndApi = new DndApi();
+
+                Dictionary<string,int> classIdList = dndApi.GetRaceOrClassesNameIdList(false);
+                foreach (int classId in classIdList.Values)
+                {
+                    classes.Add(dndApi.GetClassById(classId));
+                }
+
+                return classes;
+
+            } catch (Exception e) {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+        }
+
+        // Get list of races and ids from dnd5e api - call before using Get_RaceById.
+        // This method works quickly - you should prefer to call this over Get_AllRaces if possible.
+        [HttpGet]
+        [Route("api/races/simple")]
+        public Dictionary<string,int> Get_AllRacesSimple()
+        {
+            try {
+                DndApi dndApi = new DndApi();
+                return dndApi.GetRaceOrClassesNameIdList(true);
+            } catch (Exception e) {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+        }
+
+        // Get individual race by Id
+        // Must be called using a value from Get_RaceIds due to possible changes to id, on an update of dnd5eapi
+        [HttpGet]
+        [Route("api/races/{id}")]
+        public DndRace Get_RaceById(int id)
+        {
+            try {
+                DndApi dndApi = new DndApi();
+                return dndApi.GetRaceById(id);
+            } catch (Exception e){
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+        }
+
+        // Get list of races from dnd5e api
+        // This call requires quite a lot of network interaction with the Dnd5e Api. Avoid if possible.
+        [HttpGet]
+        [Route("api/races")]
+        public List<DndRace> Get_AllRaces()
+        {
+            try {
+                List<DndRace> races = new List<DndRace>();
+                DndApi dndApi = new DndApi();
+
+                Dictionary<string,int> raceIdList = dndApi.GetRaceOrClassesNameIdList(true);
+                foreach (int raceId in raceIdList.Values)
+                {
+                    races.Add(dndApi.GetRaceById(raceId));
+                }
+
+                return races;
+
+            } catch (Exception e) {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+        }
+
         // Add a new character to the database.
         // Returns true on success.
         [HttpPost]

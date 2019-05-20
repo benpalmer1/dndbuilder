@@ -65,7 +65,7 @@
     <Content Include="dndbuilder\index.js" />
     <Content Include="dndbuilder\character.html" />
     <Content Include="dndbuilder\editcharacter.html" />
-    <Content Include="dndbuilder\characters.js" />
+    <Content Include="dndbuilder\character.js" />
     <Content Include="dndbuilder\viewcharacter.js" />
     <Content Include="packages.config" />
   </ItemGroup>
@@ -75,7 +75,7 @@
     </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="WebApi\DndApiController.cs" />
-    <Compile Include="WebApi\DndApi\DndApi.cs" />
+    <Compile Include="WebApi\Dnd5eApi\DndApi.cs" />
     <Compile Include="WebApi\Models\DndCharacter.cs" />
     <Compile Include="WebApi\DndBuilderDatabase\Database.cs" />
     <Compile Include="WebApi\DndBuilderDatabase\SchemaQueries.cs" />
@@ -90,7 +90,7 @@
   <ItemGroup>
     <Folder Include="WebApi\" />
     <Folder Include="dndbuilder\" />
-    <Folder Include="WebApi\DndApi\" />
+    <Folder Include="WebApi\Dnd5eApi\" />
     <Folder Include="WebApi\DndBuilderDatabase\" />
     <Folder Include="WebApi\Models\" />
     <Folder Include="WebApi\Test\" />
@@ -104,6 +104,9 @@
     <MonoDevelop>
       <Properties>
         <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
+        <Policies>
+          <TextStylePolicy TabWidth="4" TabsToSpaces="False" IndentWidth="4" RemoveTrailingWhitespace="True" NoTabsAfterNonTabs="False" EolMarker="Native" FileWidth="80" scope="text/x-javascript" />
+        </Policies>
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
