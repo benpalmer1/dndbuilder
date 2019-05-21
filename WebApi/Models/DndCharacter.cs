@@ -3,7 +3,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 18MAY19
+ * Date Last Updated: 21MAY19
  * 
  * Purpose:
  * Model class to hold information about a specific DnD character created by a user.
@@ -95,18 +95,18 @@ namespace DndBuilder.WebApi.Models
         // Must be encoded:
         public string Name
         {
-            get => _Name;
+            get => HtmlUtil.Encode(HtmlUtil.Decode(_Name));
             set { _Name = HtmlUtil.Encode(HtmlUtil.Decode(value)); }
         }
 
         public string Gender
         {
-            get => _Gender;
+            get => HtmlUtil.Encode(HtmlUtil.Decode(_Gender));
             set { _Gender = HtmlUtil.Encode(HtmlUtil.Decode(value)); }
         }
         public string Biography
         {
-            get => _Biography;
+            get => HtmlUtil.Encode(HtmlUtil.Decode(_Biography));
             set { _Biography = HtmlUtil.Encode(HtmlUtil.Decode(value)); }
         }
 

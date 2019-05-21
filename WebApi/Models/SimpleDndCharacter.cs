@@ -3,12 +3,13 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 18MAY19
+ * Date Last Updated: 21MAY19
  * 
  * Purpose:
  * Simpler model class to hold information about a character, when it is being retrieved to display the list of characters.
  * Used to reduce the amount of data sent from server to client when many of the character fields aren't necessary in order to display the list.
  * No validation required as data is never updated through this class.
+ * Not usable to input data into the database, so "Get" methods of string properties are unsanitised.
  */
 
 using System;

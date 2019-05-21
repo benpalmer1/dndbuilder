@@ -53,7 +53,7 @@ namespace DndBuilder.WebApi
         }
 
         // Get list of classes from dnd5e api
-        // This call requires quite a lot of network interaction with the Dnd5e Api. Avoid if possible.
+        // This call requires quite a lot of network interaction (i.e time) with the Dnd5e Api. Avoid if possible.
         [HttpGet]
         [Route("api/classes")]
         public List<DndClass> Get_AllClasses()

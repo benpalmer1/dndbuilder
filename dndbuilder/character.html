@@ -2,7 +2,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 20MAY19
+ * Date Last Updated: 21MAY19
  *
  * Purpose:
  * Character viewing page of the DnD character builder website.
@@ -125,9 +125,13 @@
         <button type="submit">Edit</button>
         <input id="editcharacterid" type="hidden" name="id"/>
     </form>
-    <span class="col colExtra">
-        <button>Download</button>
+    <span class="colExtra">
+        <button onclick="deleteCharacter();">Delete Character</button>
     </span>
+    <span class="colExtra">
+        <button onclick="downloadCharacter();">Download Character as XML</button>
+    </span>
+
 
     <br />
     <hr />

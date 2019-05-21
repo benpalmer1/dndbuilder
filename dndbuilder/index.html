@@ -18,10 +18,9 @@
     <title>DnD Character Builder</title>
     <link href="main.css" rel="stylesheet" type="text/css" />
     <script src="index.js" language="JavaScript" type="text/JavaScript"></script>
-    <script src="characters.js" language="JavaScript" type="text/JavaScript"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body onload="init();">
+<body onload="initIndex();">
     <h1 id="homepageTitle">Dungeons and Dragons Character Builder</h1>
     <h1>⚔️🛡️</h1>
     <div>
@@ -52,17 +51,17 @@
             <br />
 
             <span class="col col1Label"><label for="racename">Race</label></span>
-            <select id="charRaceSelect" class="col col2Value" name="racename" onchange="raceSelected()" required><option value="" disabled selected>Select a race:</option></select>
+            <select id="charRaceSelect" class="col col2Value" name="racename" onchange="raceSelectedAsync()" required><option value="" disabled selected>Select a race:</option></select>
             <br />
 
             <span class="col col1Label"><label for="charClass">Character Class</label></span>
-            <select id="charClassSelect" class="col col2Value" name="charClass" onchange="classSelected()" required><option value="" disabled selected>Select a class:</option></select>
+            <select id="charClassSelect" class="col col2Value" name="charClass" onchange="classSelectedAsync()" required><option value="" disabled selected>Select a class:</option></select>
             <br />
             <br />
             <br />
 
             <span class="col col1Label"> <strong>Ability Scores</strong></span>
-            <span class="col colExtra">Ability Scores (Sum to 20)</span>
+            <span class="col colExtra">Ability Scores (Must sum to 20)</span>
             <span class="col colExtra">Race Bonus</span>
             <span class="col colExtra">Total</span>
 
@@ -120,7 +119,7 @@
             <br />
 
             <br />
-            <input type="submit" name="submit" value="Create" onsubmit="createCharacterAsync();" />
+            <input type="submit" name="submit" value="Create" />
             <br />
             <br />
         </form>

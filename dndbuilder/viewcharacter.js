@@ -43,23 +43,23 @@ function loadCharacterCallback()
     { 
         if (loadCharacterRequest.status == 200)
         {
-						let charResponse = JSON.parse(loadCharacterRequest.responseText);
-						document.getElementById("editcharacterid").value = charResponse["Id"];
-						document.getElementById("charname").innerText = charResponse["Name"];
-						document.getElementById("charage").innerText = charResponse["Age"];
-						document.getElementById("chargender").innerText = charResponse["Gender"];
-						document.getElementById("charbiography").innerText = charResponse["Biography"];
-						document.getElementById("charlevel").innerText = charResponse["Level"];
-						document.getElementById("charhitpoints").innerText = charResponse["HitPoints"];
-						document.getElementById("racename").innerText = charResponse["Race"]["Name"];
-						setRacialBonusesAndTotals(charResponse["AbilityScores"], charResponse["Race"]["RacialBonuses"]);
-						document.getElementById("classname").innerText = charResponse["CharacterClass"]["Name"];
-						document.getElementById("classhitdie").innerText = charResponse["CharacterClass"]["HitDie"];
-						document.getElementById("classspellcaster").innerText = charResponse["CharacterClass"]["Spellcaster"];
+			let charResponse = JSON.parse(loadCharacterRequest.responseText);
+			document.getElementById("editcharacterid").value = charResponse["Id"];
+			document.getElementById("charname").innerText = charResponse["Name"];
+			document.getElementById("charage").innerText = charResponse["Age"];
+			document.getElementById("chargender").innerText = charResponse["Gender"];
+			document.getElementById("charbiography").innerText = charResponse["Biography"];
+			document.getElementById("charlevel").innerText = charResponse["Level"];
+			document.getElementById("charhitpoints").innerText = charResponse["HitPoints"];
+			document.getElementById("racename").innerText = charResponse["Race"]["Name"];
+			setRacialBonusesAndTotals(charResponse["AbilityScores"], charResponse["Race"]["RacialBonuses"]);
+			document.getElementById("classname").innerText = charResponse["CharacterClass"]["Name"];
+			document.getElementById("classhitdie").innerText = charResponse["CharacterClass"]["HitDie"];
+			document.getElementById("classspellcaster").innerText = charResponse["CharacterClass"]["Spellcaster"];
         }
         else {
-						alert("Unable to find character: " + JSON.parse(loadCharacterRequest.responseText) + "\nClick 'OK' to go back to home.");
-						backToHome();
+			alert("Unable to find character: " + JSON.parse(loadCharacterRequest.responseText) + "\nClick 'OK' to go back to home.");
+			backToHome();
         }
         loadCharacterRequest = null;
     }
@@ -78,9 +78,9 @@ function setRacialBonusesAndTotals(actualvalues, racialBonuses)
         let actualValue = actualvalues[i];
         if (isNaN(actualValue) || actualValue == "")
         {
-					actualValue = 0;
+			actualValue = 0;
         }
-				document.getElementById(actualFieldIds[i]).innerText = actualValue;
+			document.getElementById(actualFieldIds[i]).innerText = actualValue;
 
         document.getElementById(totalFieldIds[i]).innerText = parseInt(actualValue) + parseInt(racialBonuses[i]);
     }

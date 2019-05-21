@@ -3,7 +3,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 18MAY19
+ * Date Last Updated: 21MAY19
  * 
  * Purpose:
  * Database interactivity class responsible for all communication with the SQLite database in a standard and consistent way.
@@ -97,8 +97,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                             CharacterClass = (DndClass)Deserialize((byte[])reader[CharacterTable.Columns.CHARCLASS]),
                             AbilityScores = (int[])Deserialize((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
                         };
-
-                        newCharacter.HitPoints = (newCharacter.Level * newCharacter.CharacterClass.HitDie) + newCharacter.AbilityScores[0];
+                        newCharacter.HitPoints = (newCharacter.Level * newCharacter.CharacterClass.HitDie) + newCharacter.AbilityScores[0] + newCharacter.Race.RacialBonuses[0];
 
                         return newCharacter;
                     }
@@ -154,7 +153,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                             CharacterClass = (DndClass)Deserialize((byte[])reader[CharacterTable.Columns.CHARCLASS]),
                             AbilityScores = (int[])Deserialize((byte[])reader[CharacterTable.Columns.ABILITYSCORES]),
                         };
-                        newCharacter.HitPoints = (newCharacter.Level * newCharacter.CharacterClass.HitDie) + newCharacter.AbilityScores[0];
+                        newCharacter.HitPoints = (newCharacter.Level * newCharacter.CharacterClass.HitDie) + newCharacter.AbilityScores[0] + newCharacter.Race.RacialBonuses[0];
 
                         return newCharacter;
                     }
@@ -208,7 +207,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                                 CharacterClass = (DndClass)Deserialize((byte[])reader[CharacterTable.Columns.CHARCLASS]),
                                 AbilityScores = (int[])Deserialize((byte[])reader[CharacterTable.Columns.ABILITYSCORES])
                             };
-                            tempChar.HitPoints = (tempChar.Level * tempChar.CharacterClass.HitDie) + tempChar.AbilityScores[0];
+                            tempChar.HitPoints = (tempChar.Level * tempChar.CharacterClass.HitDie) + tempChar.AbilityScores[0] + tempChar.Race.RacialBonuses[0];
 
                             characterModels.Add(tempChar);
                         }
