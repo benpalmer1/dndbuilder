@@ -2,7 +2,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 21MAY19
+ * Date Last Updated: 22MAY19
  *
  * Purpose:
  * Javascript for the index page of the DnD character builder website.
@@ -10,13 +10,13 @@
  */
 
 // XHR Request Variables
-let loadAllCharsRequest = "";
-let loadClassListRequest = "";
-let loadRaceListRequest = "";
-let loadClassRequest = "";
-let loadRaceRequest = "";
-let createCharacterRequest = "";
-let verifyNameUniqueRequest = "";
+let loadAllCharsRequest = null;
+let loadClassListRequest = null;
+let loadRaceListRequest = null;
+let loadClassRequest = null;
+let loadRaceRequest = null;
+let createCharacterRequest = null;
+let verifyNameUniqueRequest = null;
 
 // Globals
 let hitpoints = { level:null, hitdie:null, constitution:null, bonus:null };
@@ -32,7 +32,7 @@ function initIndex()
     }
 
     // Validation / calculations setup
-    characterFormValidationSetup();
+    abilityScoreValidationSetup();
     hitPointsCalculator();
     // Load races and classes
     loadRaceListAsync();
@@ -43,7 +43,7 @@ function initIndex()
 
 // FORM VALIDATION METHODS --------------------------------------------------------
 
-function characterFormValidationSetup()
+function abilityScoreValidationSetup()
 {
     let f1 = document.getElementById("constitution");
     let f2 = document.getElementById("dexterity");
@@ -228,9 +228,9 @@ function addCharacterToList(id, name, race, charClass, level)
 
 // XHR REQUEST METHODS BELOW --------------------------------------------------------
 
-function verifyNameUnique()
+function verifyNameUniqueAsync()
 {
-    if (document.getElementById("characterName") != "")
+    if (document.getElementById("characterName").value != "")
     {
         verifyNameUniqueRequest = new XMLHttpRequest();
 

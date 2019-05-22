@@ -3,7 +3,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 18MAY19
+ * Date Last Updated: 22MAY19
  * 
  * Purpose:
  * Database schema class responsible for holding DB schema and associated queries.
@@ -136,35 +136,6 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                     return "SELECT COUNT(*) FROM " + CharacterTable.NAME;
                 }
 
-                public static SqliteCommand EditQuery(DndCharacter charModel, string existingName)
-                {
-                    SqliteCommand editQuery = new SqliteCommand(
-                        "UPDATE " + CharacterTable.NAME + " SET " +
-                        Columns.CHARNAME       + " = @name, " +
-                        Columns.AGE            + " = @age, " +
-                        Columns.GENDER         + " = @gender, " +
-                        Columns.BIOGRAPHY      + " = @biography, " +
-                        Columns.LEVEL          + " = @level, " +
-                        Columns.RACE           + " = @race, " +
-                        Columns.CHARCLASS      + " = @class, " +
-                        Columns.HITPOINTS      + " = @hp, " +
-                        Columns.ABILITYSCORES  + " = @abilityscores" +
-                        " WHERE " + Columns.CHARNAME + " = @existingname");
-
-                    editQuery.Parameters.Add(new SqliteParameter("@existingname", existingName));
-                    editQuery.Parameters.Add(new SqliteParameter("@name", charModel.Name));
-                    editQuery.Parameters.Add(new SqliteParameter("@age", charModel.Age));
-                    editQuery.Parameters.Add(new SqliteParameter("@gender", charModel.Gender));
-                    editQuery.Parameters.Add(new SqliteParameter("@biography", charModel.Biography));
-                    editQuery.Parameters.Add(new SqliteParameter("@level", charModel.Level));
-                    editQuery.Parameters.Add(new SqliteParameter("@race", Database.Serialize(charModel.Race)));
-                    editQuery.Parameters.Add(new SqliteParameter("@class", Database.Serialize(charModel.CharacterClass)));
-                    editQuery.Parameters.Add(new SqliteParameter("@hp", charModel.HitPoints));
-                    editQuery.Parameters.Add(new SqliteParameter("@abilityscores", Database.Serialize(charModel.AbilityScores)));
-
-                    return editQuery;
-                }
-
                 public static SqliteCommand EditQuery(DndCharacter charModel, int id)
                 {
                     SqliteCommand editQuery = new SqliteCommand(
@@ -209,7 +180,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                 {
                     SqliteCommand deleteQuery = new SqliteCommand(
                         "DELETE FROM " + CharacterTable.NAME +
-                        " WHERE " + Columns.CHARNAME + " = @id");
+                        " WHERE " + Columns.ID + " = @id");
 
                     deleteQuery.Parameters.Add(new SqliteParameter("@id", id));
 

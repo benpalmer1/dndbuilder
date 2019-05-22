@@ -2,7 +2,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 20MAY19
+ * Date Last Updated: 22MAY19
  *
  * Purpose:
  * Main page of the DnD character builder website.
@@ -31,7 +31,7 @@
             <span class="col col2Value"></span>
             <br />
             <span class="col col1Label"><label for="name">Name</label></span>
-            <input id="characterName" class="col col2Value" type="text" placeholder="Name (unique)" name="name" required pattern="^(?!\s*$).+" onblur="verifyNameUnique()" />
+            <input id="characterName" class="col col2Value" type="text" placeholder="Name (unique)" name="name" required pattern="^(?!\s*$).+" oninput="verifyNameUniqueAsync()" />
             <br />
 
             <span class="col col1Label"><label for="age">Age</label></span>

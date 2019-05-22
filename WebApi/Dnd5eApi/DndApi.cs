@@ -3,7 +3,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 16MAY19
+ * Date Last Updated: 22MAY19
  * 
  * Purpose:
  * Interaction with the DnD5e API - retrieval of race and class information.
@@ -65,7 +65,7 @@ namespace DndBuilder.WebApi.Dnd5eApi
                         string tempUrl = item["url"].ToString();
 
                         // Protect against server spoofing of URL. Replaces expected endpoint from returned URL, interacts with "ids" instead.
-                        // StringComparison.Ordinal to ensure correct response when system is using a non en-us locale.
+                        // StringComparison.Ordinal to ensure correct response when system is using a different locale.
                         if (tempUrl.StartsWith(endpoint, StringComparison.Ordinal))
                         {
                             tempUrl = tempUrl.Replace(endpoint, "");

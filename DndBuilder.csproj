@@ -67,6 +67,7 @@
     <Content Include="dndbuilder\editcharacter.html" />
     <Content Include="dndbuilder\viewcharacter.js" />
     <Content Include="packages.config" />
+    <Content Include="dndbuilder\editcharacter.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">

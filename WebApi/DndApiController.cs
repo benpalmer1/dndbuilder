@@ -3,11 +3,14 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 19MAY19
+ * Date Last Updated: 22MAY19
  * 
  * Purpose:
  * Exposed API for communication with a front end user interface which implements character building functionality.
  * Primarily used as an intermediary between the website and database calls.
+ * 
+ * I find it appropriate to catch base Exception for these methods, as well as my custom exception classes, as it
+ * prevents a stack trace being shown to the user, and any other undesired effects. For these I report internal server errors as it was an undesired action - likely not client error.
  */
 
 using System;
@@ -19,6 +22,8 @@ using System.Web.Http;
 using DndBuilder.WebApi.DndBuilderDatabase;
 using DndBuilder.WebApi.Models;
 using DndBuilder.WebApi.Dnd5eApi;
+using static DndBuilder.WebApi.Dnd5eApi.DndApi;
+using static DndBuilder.WebApi.DndBuilderDatabase.Database;
 
 namespace DndBuilder.WebApi
 {
@@ -30,11 +35,18 @@ namespace DndBuilder.WebApi
         [Route("api/classes/simple")]
         public Dictionary<string,int> Get_AllClassesSimple()
         {
-            try {
+            try
+            {
                 DndApi dndApi = new DndApi();
                 return dndApi.GetRaceOrClassesNameIdList(false);
-            } catch (Exception e) {
+            }
+            catch (DndApiException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -44,11 +56,18 @@ namespace DndBuilder.WebApi
         [Route("api/classes/{id}")]
         public DndClass Get_ClassById(int id)
         {
-            try {
+            try
+            {
                 DndApi dndApi = new DndApi();
                 return dndApi.GetClassById(id);
-            } catch (Exception e){
+            }
+            catch (DndApiException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -58,7 +77,8 @@ namespace DndBuilder.WebApi
         [Route("api/classes")]
         public List<DndClass> Get_AllClasses()
         {
-            try {
+            try
+            {
                 List<DndClass> classes = new List<DndClass>();
                 DndApi dndApi = new DndApi();
 
@@ -70,8 +90,14 @@ namespace DndBuilder.WebApi
 
                 return classes;
 
-            } catch (Exception e) {
+            }
+            catch (DndApiException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -81,11 +107,18 @@ namespace DndBuilder.WebApi
         [Route("api/races/simple")]
         public Dictionary<string,int> Get_AllRacesSimple()
         {
-            try {
+            try
+            {
                 DndApi dndApi = new DndApi();
                 return dndApi.GetRaceOrClassesNameIdList(true);
-            } catch (Exception e) {
+            }
+            catch (DndApiException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -95,11 +128,18 @@ namespace DndBuilder.WebApi
         [Route("api/races/{id}")]
         public DndRace Get_RaceById(int id)
         {
-            try {
+            try
+            {
                 DndApi dndApi = new DndApi();
                 return dndApi.GetRaceById(id);
-            } catch (Exception e){
+            }
+            catch (DndApiException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -109,7 +149,8 @@ namespace DndBuilder.WebApi
         [Route("api/races")]
         public List<DndRace> Get_AllRaces()
         {
-            try {
+            try
+            {
                 List<DndRace> races = new List<DndRace>();
                 DndApi dndApi = new DndApi();
 
@@ -121,8 +162,14 @@ namespace DndBuilder.WebApi
 
                 return races;
 
-            } catch (Exception e) {
+            }
+            catch (DndApiException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -132,11 +179,18 @@ namespace DndBuilder.WebApi
         [Route("api/characters/add")]
         public bool Post_AddCharacter([FromBody] DndCharacter newCharacter)
         {
-            try {
+            try
+            {
                 Database database = new Database();
                 return database.AddCharacter(newCharacter);
-            } catch (Exception e) {
+            }
+            catch (DatabaseException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -146,25 +200,18 @@ namespace DndBuilder.WebApi
         [Route("api/characters/edit")]
         public bool Post_EditCharacter([FromBody] DndCharacter updatedCharacter)
         {
-            try {
+            try
+            {
                 Database database = new Database();
                 return database.EditCharacter(updatedCharacter);
-            } catch (Exception e) {
+            }
+            catch (DatabaseException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
             }
-        }
-
-        // Edit a character in the database - by name.
-        // Returns true on success.
-        [HttpPost]
-        [Route("api/characters/edit")]
-        public bool Post_EditCharacter([FromBody] DndCharacter updatedCharacter, [FromBody] string existingName)
-        {
-            try {
-                Database database = new Database();
-                return database.EditCharacter(updatedCharacter, existingName);
-            } catch (Exception e) {
-                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -173,11 +220,18 @@ namespace DndBuilder.WebApi
         [Route("api/characters")]
         public List<DndCharacter> Get_List()
         {
-            try {
+            try
+            {
                 Database database = new Database();
                 return database.GetAllCharacters();
-            } catch (Exception e) {
+            }
+            catch (DatabaseException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -187,11 +241,18 @@ namespace DndBuilder.WebApi
         [Route("api/characters/simple")]
         public List<SimpleDndCharacter> Get_SimpleList()
         {
-            try {
+            try
+            {
                 Database database = new Database();
                 return database.GetAllCharactersSimple();
-            } catch (Exception e) {
+            }
+            catch (DatabaseException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -200,11 +261,18 @@ namespace DndBuilder.WebApi
         [Route("api/characters/{id}")]
         public DndCharacter Get_GetCharacter(int id)
         {
-            try {
+            try
+            {
                 Database database = new Database();
                 return database.GetCharacter(id);
-            } catch (Exception e) {
+            }
+            catch (DatabaseException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -213,11 +281,18 @@ namespace DndBuilder.WebApi
         [Route("api/characters")]
         public DndCharacter Post_GetCharacter([FromBody]string characterName)
         {
-            try {
+            try
+            {
                 Database database = new Database();
                 return database.GetCharacter(characterName);
-            } catch (Exception e) {
+            }
+            catch (DatabaseException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
@@ -226,37 +301,58 @@ namespace DndBuilder.WebApi
         [Route("api/characters/exists")]
         public bool Post_CharacterExists([FromBody]string characterName)
         {
-            try {
+            try
+            {
                 Database database = new Database();
                 return database.IsCharacterNameInUse(characterName);
-            } catch (Exception e) {
+            }
+            catch (DatabaseException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
         // Delete a character from the database - by id.
-        [HttpDelete]
-        [Route("api/characters/delete")]
-        public bool Delete_DeleteCharacteryById([FromBody]int characterId)
+        [HttpGet]
+        [Route("api/characters/delete/{id}")]
+        public bool Get_DeleteCharacteryById(int id)
         {
-            try {
+            try
+            {
                 Database database = new Database();
-                return database.DeleteCharacter(characterId);
-            } catch (Exception e) {
+                return database.DeleteCharacter(id);
+            }
+            catch (DatabaseException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
 
         // Delete a character from the database - by name.
-        [HttpDelete]
+        [HttpPost]
         [Route("api/characters/delete")]
-        public bool Delete_DeleteCharacterByName([FromBody]string characterName)
+        public bool Post_DeleteCharacterByName([FromBody]string characterName)
         {
-            try {
+            try
+            {
                 Database database = new Database();
                 return database.DeleteCharacter(characterName);
-            } catch (Exception e) {
+            }
+            catch (DatabaseException e)
+            {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
             }
         }
     }

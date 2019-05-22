@@ -3,7 +3,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 21MAY19
+ * Date Last Updated: 22MAY19
  * 
  * Purpose:
  * Database interactivity class responsible for all communication with the SQLite database in a standard and consistent way.
@@ -318,48 +318,6 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
         }
 
         // Returns true on success
-        public bool EditCharacter(DndCharacter character, string existingCharacter)
-        {
-            try
-            {
-                if (!character.IsValid)
-                {
-                    throw new DatabaseException("Unable to edit character. Character invalid.");
-                }
-
-                using (SqliteConnection dbConnection = DatabaseSetup())
-                {
-                    // Still check by name
-                    SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(character.Name);
-                    checkDBCmd.Connection = dbConnection;
-                    int count = Convert.ToInt32(checkDBCmd.ExecuteScalar());
-
-                    if (count == 1)
-                    {
-                        SqliteCommand updateCharCmd = CharacterTable.Queries.EditQuery(character, existingCharacter);
-                        updateCharCmd.Connection = dbConnection;
-
-                        if (updateCharCmd.ExecuteNonQuery() == 1)
-                        {
-                            Logger.Log("Info: Character updated: " + character.Name);
-                            return true;
-                        }
-                    }
-                }
-            }
-            catch (Exception e) when (e is SqliteException || e is InvalidCastException)
-            {
-                throw new DatabaseException("Unable to update character. " + e.Message);
-            }
-            finally
-            {
-                Logger.Log("Info: Client disconnected.");
-            }
-
-            return false;
-        }
-
-        // Returns true on success
         // Method overload
         public bool EditCharacter(DndCharacter character)
         {
@@ -372,14 +330,14 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
 
                 using (SqliteConnection dbConnection = DatabaseSetup())
                 {
-                    // Still check by name
-                    SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(character.Name);
+
+                    SqliteCommand checkDBCmd = CharacterTable.Queries.CheckExistsQuery(character.Id);
                     checkDBCmd.Connection = dbConnection;
                     int count = Convert.ToInt32(checkDBCmd.ExecuteScalar());
 
                     if (count == 1)
                     {
-                        SqliteCommand updateCharCmd = CharacterTable.Queries.EditQuery(character, character.Id.ToString());
+                        SqliteCommand updateCharCmd = CharacterTable.Queries.EditQuery(character, character.Id);
                         updateCharCmd.Connection = dbConnection;
 
                         if (updateCharCmd.ExecuteNonQuery() == 1)

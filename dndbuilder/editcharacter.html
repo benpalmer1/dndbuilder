@@ -2,7 +2,7 @@
  * Name: Benjamin Nicholas Palmer
  * Student ID: 17743075
  * Class: Distributed Computing (COMP3008)
- * Date Last Updated: 15MAY19
+ * Date Last Updated: 22MAY19
  *
  * Purpose:
  * Character editing page of the DnD character builder website.
@@ -14,13 +14,119 @@
     <meta charset="utf-8" />
     <title>Create Character</title>
     <link href="main.css" rel="stylesheet" type="text/css" />
-    <script src="characters.js" language="JavaScript" type="text/JavaScript"></script>
+    <script src="editcharacter.js" language="JavaScript" type="text/JavaScript"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<div>
+<body onload="initEditCharacter();">
     <h1 id="pageTitle">Edit Character</h1>
-    <form>
+    <hr />
 
+    <form style="display: inline;" action="character.html" method="GET">
+        <button type="submit">Back to View Character</button>
+        <input id="viewcharacterid" type="hidden" name="id" />
     </form>
-</div>
+    <span>
+        <button onclick="backToHome();">Back to Home</button>
+    </span>
+
+    <form id="editCharacterForm">
+        <span class="col col1Label"><strong>Character Details</strong></span>
+        <span class="col col2Value"></span>
+        <br />
+        <span class="col col1Label"><label for="name">Name</label></span>
+        <input id="characterName" class="col col2Value" type="text" placeholder="Name (unique)" name="name" oninput="verifyNameUniqueAsync()" required pattern="^(?!\s*$).+" />
+        <br />
+
+        <span class="col col1Label"><label for="age">Age</label></span>
+        <input id="characterAge" class="col col2Value" type="number" placeholder="Age (0-500)" name="age" min="0" max="500" required />
+        <br />
+
+        <span class="col col1Label"><label for="gender">Gender</label></span>
+        <input id="characterGender" class="col col2Value" type="text" placeholder="Gender" name="gender" />
+        <br />
+
+        <span class="col col1Label"><label for="biography">Biography</label></span>
+        <input id="characterBiography" class="col col2Value" type="text" placeholder="Biography (500 chars max)" name="biography" maxlength="500" />
+        <br />
+
+        <span class="col col1Label"><label for="level">Level</label></span>
+        <input id="characterLevel" class="col col2Value" type="number" placeholder="Level (1-20)" name="level" min="1" max="20" required oninput="hitPointsCalculator()" />
+        <br />
+
+        <span class="col col1Label"><label for="racename">Race</label></span>
+        <select id="charRaceSelect" class="col col2Value" name="racename" onchange="raceSelectedAsync()" required><option value="" disabled selected>Select a race:</option></select>
+        <br />
+
+        <span class="col col1Label"><label for="charClass">Character Class</label></span>
+        <select id="charClassSelect" class="col col2Value" name="charClass" onchange="classSelectedAsync()" required><option value="" disabled selected>Select a class:</option></select>
+        <br />
+        <br />
+        <br />
+
+        <span class="col col1Label"> <strong>Ability Scores</strong></span>
+        <span class="col colExtra">Ability Scores (Must sum to 20)</span>
+        <span class="col colExtra">Race Bonus</span>
+        <span class="col colExtra">Total</span>
+
+        <div class="abilityscores" name="AbilityScores">
+            <span class="col col1Label"><label for="Consitution">Consitution</label></span>
+            <input id="constitution" class="col colExtra" type="number" name="Consitution" value="0" min="0" max="20" />
+            <span id="constitutionbonus" class="col colExtra"></span>
+            <span id="constitutiontotal" class="col colExtra"></span>
+            <br />
+
+            <span class="col col1Label"><label for="Dexterity">Dexterity</label></span>
+            <input id="dexterity" class="col colExtra" type="number" name="Dexterity" value="0" min="0" max="20" />
+            <span id="dexteritybonus" class="col colExtra">Select race</span>
+            <span id="dexteritytotal" class="col colExtra"></span>
+            <br />
+
+            <span class="col col1Label"><label for="Strength">Strength</label></span>
+            <input id="strength" class="col colExtra" type="number" name="Strength" value="0" min="0" max="20" />
+            <span id="strengthbonus" class="col colExtra">to update.</span>
+            <span id="strengthtotal" class="col colExtra"></span>
+            <br />
+
+            <span class="col col1Label"><label for="Charisma">Charisma</label></span>
+            <input id="charisma" class="col colExtra" type="number" name="Charisma" value="0" min="0" max="20" />
+            <span id="charismabonus" class="col colExtra"></span>
+            <span id="charismatotal" class="col colExtra"></span>
+            <br />
+
+            <span class="col col1Label"><label for="Intelligence">Intelligence</label></span>
+            <input id="intelligence" class="col colExtra" type="number" name="Intelligence" value="0" min="0" max="20" />
+            <span id="intelligencebonus" class="col colExtra"></span>
+            <span id="intelligencetotal" class="col colExtra"></span>
+            <br />
+
+            <span class="col col1Label"><label for="Wisdom">Wisdom</label></span>
+            <input id="wisdom" class="col colExtra" type="number" name="Wisdom" value="0" min="0" max="20" />
+            <span id="wisdombonus" class="col colExtra"></span>
+            <span id="wisdomtotal" class="col colExtra"></span>
+            <br />
+        </div>
+
+        <br />
+        <br />
+
+        <span class="col col1Label"><strong>Calculated Values</strong></span>
+        <span class="col col2Value"></span>
+        <br />
+
+        <span class="col col1Label"><label for="spellcaster">Spellcaster</label></span>
+        <input id="spellcaster" class="col col2Value" type="text" name="spellcaster" placeholder="Select class to update." disabled />
+        <br />
+
+        <span class="col col1Label"><label for="hitpoints">Hitpoints</label></span>
+        <input id="hitpoints" class="col col2Value" type="number" name="hitpoints" placeholder="Select level, class & abilities." disabled />
+        <br />
+
+        <br />
+        <input type="submit" name="submit" value="Save" />
+    </form>
+
+    <br />
+    <hr />
+    <div>Curtin University - Benjamin Palmer - 17743075 - Distributed Computing Assignment </div>
+</body>
 </html>
