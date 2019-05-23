@@ -95,10 +95,6 @@
     <Folder Include="WebApi\Models\" />
     <Folder Include="WebApi\Test\" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="NOTES.txt" />
-    <None Include="api.md" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>

@@ -8,6 +8,7 @@
  * Purpose:
  * Exposed API for communication with a front end user interface which implements character building functionality.
  * Primarily used as an intermediary between the website and database calls.
+ * POST is used for by-name methods, as it is possible that a character's name could be more than allowable size in a GET request.
  * 
  * I find it appropriate to catch base Exception for these methods, as well as my custom exception classes, as it
  * prevents a stack trace being shown to the user, and any other undesired effects. For these I report internal server errors as it was an undesired action - likely not client error.
@@ -29,48 +30,6 @@ namespace DndBuilder.WebApi
 {
     public class DndApiController : ApiController
     {
-        // Get list of classes and ids from dnd5e api - call before using Get_ClassById.
-        // This method works quickly - you should prefer to call this over Get_AllClasses if possible.
-        [HttpGet]
-        [Route("api/classes/simple")]
-        public Dictionary<string,int> Get_AllClassesSimple()
-        {
-            try
-            {
-                DndApi dndApi = new DndApi();
-                return dndApi.GetRaceOrClassesNameIdList(false);
-            }
-            catch (DndApiException e)
-            {
-                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
-            }
-            catch (Exception e)
-            {
-                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
-            }
-        }
-
-        // Get individual class by Id
-        // Must be called using a value from Get_ClassIds due to possible changes to id, on an update of dnd5eapi
-        [HttpGet]
-        [Route("api/classes/{id}")]
-        public DndClass Get_ClassById(int id)
-        {
-            try
-            {
-                DndApi dndApi = new DndApi();
-                return dndApi.GetClassById(id);
-            }
-            catch (DndApiException e)
-            {
-                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
-            }
-            catch (Exception e)
-            {
-                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
-            }
-        }
-
         // Get list of classes from dnd5e api
         // This call requires quite a lot of network interaction (i.e time) with the Dnd5e Api. Avoid if possible.
         [HttpGet]
@@ -101,7 +60,79 @@ namespace DndBuilder.WebApi
             }
         }
 
+        // Get list of classes and ids from dnd5e api - call before using Get_ClassById.
+        // This method works quickly - you should prefer to call this over Get_AllClasses if possible.
+        [HttpGet]
+        [Route("api/classes/simple")]
+        public Dictionary<string,int> Get_AllClassesSimple()
+        {
+            try
+            {
+                DndApi dndApi = new DndApi();
+                return dndApi.GetRaceOrClassesNameIdList(false);
+            }
+            catch (DndApiException e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
+            }
+        }
+
+        // Get individual class by Id
+        // Must be called using a value from /api/classes/simple due to possible changes to id, on an update of dnd5eapi
+        [HttpGet]
+        [Route("api/classes/{id}")]
+        public DndClass Get_ClassById(int id)
+        {
+            try
+            {
+                DndApi dndApi = new DndApi();
+                return dndApi.GetClassById(id);
+            }
+            catch (DndApiException e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
+            }
+        }
+
         // Get list of races and ids from dnd5e api - call before using Get_RaceById.
+        // Get list of races from dnd5e api
+        // This call requires quite a lot of network interaction with the Dnd5e Api. Avoid if possible.
+        [HttpGet]
+        [Route("api/races")]
+        public List<DndRace> Get_AllRaces()
+        {
+            try
+            {
+                List<DndRace> races = new List<DndRace>();
+                DndApi dndApi = new DndApi();
+
+                Dictionary<string,int> raceIdList = dndApi.GetRaceOrClassesNameIdList(true);
+                foreach (int raceId in raceIdList.Values)
+                {
+                    races.Add(dndApi.GetRaceById(raceId));
+                }
+
+                return races;
+
+            }
+            catch (DndApiException e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
+            }
+        }
+
         // This method works quickly - you should prefer to call this over Get_AllRaces if possible.
         [HttpGet]
         [Route("api/races/simple")]
@@ -134,78 +165,6 @@ namespace DndBuilder.WebApi
                 return dndApi.GetRaceById(id);
             }
             catch (DndApiException e)
-            {
-                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
-            }
-            catch (Exception e)
-            {
-                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
-            }
-        }
-
-        // Get list of races from dnd5e api
-        // This call requires quite a lot of network interaction with the Dnd5e Api. Avoid if possible.
-        [HttpGet]
-        [Route("api/races")]
-        public List<DndRace> Get_AllRaces()
-        {
-            try
-            {
-                List<DndRace> races = new List<DndRace>();
-                DndApi dndApi = new DndApi();
-
-                Dictionary<string,int> raceIdList = dndApi.GetRaceOrClassesNameIdList(true);
-                foreach (int raceId in raceIdList.Values)
-                {
-                    races.Add(dndApi.GetRaceById(raceId));
-                }
-
-                return races;
-
-            }
-            catch (DndApiException e)
-            {
-                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
-            }
-            catch (Exception e)
-            {
-                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
-            }
-        }
-
-        // Add a new character to the database.
-        // Returns true on success.
-        [HttpPost]
-        [Route("api/characters/add")]
-        public bool Post_AddCharacter([FromBody] DndCharacter newCharacter)
-        {
-            try
-            {
-                Database database = new Database();
-                return database.AddCharacter(newCharacter);
-            }
-            catch (DatabaseException e)
-            {
-                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
-            }
-            catch (Exception e)
-            {
-                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
-            }
-        }
-
-        // Edit a character in the database - by id.
-        // Returns true on success.
-        [HttpPost]
-        [Route("api/characters/edit")]
-        public bool Post_EditCharacter([FromBody] DndCharacter updatedCharacter)
-        {
-            try
-            {
-                Database database = new Database();
-                return database.EditCharacter(updatedCharacter);
-            }
-            catch (DatabaseException e)
             {
                 throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
             }
@@ -296,7 +255,50 @@ namespace DndBuilder.WebApi
             }
         }
 
-        // Determine if a character by that name exists in the database - by name.
+        // Add a new character to the database.
+        // Returns true on success.
+        [HttpPost]
+        [Route("api/characters/add")]
+        public bool Post_AddCharacter([FromBody] DndCharacter newCharacter)
+        {
+            try
+            {
+                Database database = new Database();
+                return database.AddCharacter(newCharacter);
+            }
+            catch (DatabaseException e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
+            }
+        }
+
+        // Edit a character in the database - by id.
+        // Returns true on success.
+        [HttpPost]
+        [Route("api/characters/edit")]
+        public bool Post_EditCharacter([FromBody] DndCharacter updatedCharacter)
+        {
+            try
+            {
+                Database database = new Database();
+                return database.EditCharacter(updatedCharacter);
+            }
+            catch (DatabaseException e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.BadRequest, e.Message));
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(this.Request.CreateResponse<object>(HttpStatusCode.InternalServerError, e.Message));
+            }
+        }
+
+        
+        // Determine if a character by that name exists in the database.
         [HttpPost]
         [Route("api/characters/exists")]
         public bool Post_CharacterExists([FromBody]string characterName)

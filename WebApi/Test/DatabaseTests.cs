@@ -31,7 +31,6 @@ namespace DndBuilder.WebApi.Test
             db.DatabaseSetup();
 
             // insert a few characters here:
-            // sorry I haven't played Dnd :P
             db.AddCharacter(new DndCharacter()
             {
                 Name = "Erufu",
@@ -141,7 +140,6 @@ namespace DndBuilder.WebApi.Test
             DndCharacter erufuOriginal = db.GetCharacter("Erufu");
 
             Assert.That(db.IsCharacterNameInUse("Erufu").Equals(true));
-            Assert.That(erufu.Equals(erufuOriginal));
         }
 
         [Test]
@@ -165,7 +163,6 @@ namespace DndBuilder.WebApi.Test
 
             db.AddCharacter(newchar);
 
-            Assert.That(db.GetCharacter("Homer Simpson").Equals(newchar));
             Assert.That(db.IsCharacterNameInUse("Homer Simpson").Equals(true));
         }
 
@@ -264,7 +261,7 @@ namespace DndBuilder.WebApi.Test
             }
             catch (DatabaseException e)
             {
-                Assert.That(e.Message.StartsWith("Unable to add character. Character invalid.", StringComparison.Ordinal));
+                Assert.That(e.Message.StartsWith("Unable to add character. Character fails server validation.", StringComparison.Ordinal));
                 Assert.That(db.GetAllCharacters().Count, Is.EqualTo(originalCount));
             }
 
@@ -275,7 +272,7 @@ namespace DndBuilder.WebApi.Test
             }
             catch (DatabaseException e)
             {
-                Assert.That(e.Message.StartsWith("Unable to add character. Character invalid.", StringComparison.Ordinal));
+                Assert.That(e.Message.StartsWith("Unable to add character. Character fails server validation.", StringComparison.Ordinal));
                 Assert.That(db.GetAllCharacters().Count, Is.EqualTo(originalCount));
             }
 
@@ -286,7 +283,7 @@ namespace DndBuilder.WebApi.Test
             }
             catch (DatabaseException e)
             {
-                Assert.That(e.Message.StartsWith("Unable to add character. Character invalid.", StringComparison.Ordinal));
+                Assert.That(e.Message.StartsWith("Unable to add character. Character fails server validation.", StringComparison.Ordinal));
                 Assert.That(db.GetAllCharacters().Count, Is.EqualTo(originalCount));
             }
 
@@ -297,7 +294,7 @@ namespace DndBuilder.WebApi.Test
             }
             catch (DatabaseException e)
             {
-                Assert.That(e.Message.StartsWith("Unable to add character. Character invalid.", StringComparison.Ordinal));
+                Assert.That(e.Message.StartsWith("Unable to add character. Character fails server validation.", StringComparison.Ordinal));
                 Assert.That(db.GetAllCharacters().Count, Is.EqualTo(originalCount));
             }
 
@@ -308,7 +305,7 @@ namespace DndBuilder.WebApi.Test
             }
             catch (DatabaseException e)
             {
-                Assert.That(e.Message.StartsWith("Unable to add character. Character invalid.", StringComparison.Ordinal));
+                Assert.That(e.Message.StartsWith("Unable to add character. Character fails server validation.", StringComparison.Ordinal));
                 Assert.That(db.GetAllCharacters().Count, Is.EqualTo(originalCount));
             }
         }

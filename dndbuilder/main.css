@@ -6,7 +6,7 @@
  *
  * Purpose:
  * CSS for the DnD character builder website.
- * Used "column" classes to format the html. If I was to do again, I probably should have used something like a flexbox.
+ * Used "column" classes to format the html. If I was to do again, I probably should have used something like a flexbox or CSS grid.
  **/
 
 body {

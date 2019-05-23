@@ -318,7 +318,6 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
         }
 
         // Returns true on success
-        // Method overload
         public bool EditCharacter(DndCharacter character)
         {
             try
@@ -442,7 +441,7 @@ namespace DndBuilder.WebApi.DndBuilderDatabase
                 }
 
                 SqliteConnection newConnection = new SqliteConnection($"Data Source={DATABASE_FILENAME};Version=3;");
-                 newConnection.Open();
+                newConnection.Open();
 
                 // Contains IF NOT EXISTS (removes redundant query to check for existing table)
                 SqliteCommand newTableCmd = new SqliteCommand(CharacterTable.Queries.TableSchemaQuery(), newConnection);

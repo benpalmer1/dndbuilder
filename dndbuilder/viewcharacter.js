@@ -80,7 +80,7 @@ function setRacialBonusesAndTotals(actualvalues, racialBonuses)
 
     for (let i = 0; i < racialBonuses.length; i++)
     {
-				document.getElementById(bonusFieldIds[i]).innerText = racialBonuses[i];
+		document.getElementById(bonusFieldIds[i]).innerText = racialBonuses[i];
 				
         let actualValue = actualvalues[i];
         if (isNaN(actualValue) || actualValue == "")

@@ -7,7 +7,7 @@
  * 
  * Purpose:
  * Interaction with the DnD5e API - retrieval of race and class information.
- * Data is sanitised through encoding and validity checks.
+ * Data is sanitised through encoding and fully validated to the assignment spec requirements.
  *
  * Note to marker:
  * Unfortunately the dnd5eapi.co does not support HTTPS, but I would have liked to connect via HTTPS and verify the certificate.
@@ -73,7 +73,7 @@ namespace DndBuilder.WebApi.Dnd5eApi
                         }
                         else
                         {
-                            throw new DndApiException("DnD Character URL returned from API using the wrong format. Server may have been spoofed.");
+                            throw new DndApiException("URL returned from dnd5e API using the wrong format. Server may have been spoofed.");
                         }
                     }
 
@@ -87,7 +87,7 @@ namespace DndBuilder.WebApi.Dnd5eApi
             catch (Exception e) when (e is IOException || e is InvalidCastException || e is DndApiException ||
                                       e is FormatException || e is ArgumentException || e is JsonReaderException)
             {
-                throw new DndApiException($"Unable to retrieve character list from Dnd5e API: {e.Message}");
+                throw new DndApiException($"Unable to retrieve class/race list from Dnd5e API: {e.Message}");
             }
         }
 
@@ -160,7 +160,7 @@ namespace DndBuilder.WebApi.Dnd5eApi
             }
             catch (Exception e) when ( e is InvalidCastException || e is FormatException || e is ArgumentException || e is JsonReaderException)
             {
-                throw new DndApiException($"Unable to specified character class from Dnd5e API: {e.Message}");
+                throw new DndApiException($"Unable to retrieve specified character class from Dnd5e API: {e.Message}");
             }
         }
     }
